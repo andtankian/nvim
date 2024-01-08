@@ -1,33 +1,47 @@
 return {
-  { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+  { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
   {
-    'nvim-telescope/telescope.nvim', tag = '0.1.5',
-    dependencies = { 'nvim-lua/plenary.nvim' },
+    "nvim-telescope/telescope.nvim",
+    tag = "0.1.5",
+    dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
       local telescope = require("telescope")
 
       telescope.setup({
         defaults = {
+          vimgrep_arguments = {
+            "rg",
+            "-L",
+            "--color=never",
+            "--no-heading",
+            "--with-filename",
+            "--line-number",
+            "--column",
+            "--smart-case",
+          },
+          selection_strategy = "reset",
+          sorting_strategy = "ascending",
+          file_ignore_patterns = { "node_modules" },
           layout_strategy = "horizontal",
           layout_config = {
             horizontal = {
               width = 0.9,
-              prompt_position = "top"
-            } 
+              prompt_position = "top",
+            },
           },
           path_display = {
             shorten = { len = 3, exclude = { -1, -2, -3, 3, 4 } },
-            truncate = 1
-          }
+            truncate = 1,
+          },
         },
         extensions = {
           fzf = {
             fuzzy = false,
             override_generic_sorter = true,
             override_file_sorter = true,
-            case_mode = "smart_case"
-          }
-        }
+            case_mode = "smart_case",
+          },
+        },
       })
 
       telescope.load_extension("fzf")
@@ -38,8 +52,6 @@ return {
       keymap.set("n", "<leader>ff", builtin.find_files, {})
       keymap.set("n", "<leader>fw", builtin.live_grep, {})
       keymap.set("n", "<leader>gt", builtin.git_status, {})
-
-    end
-
-  }
+    end,
+  },
 }
