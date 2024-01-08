@@ -1,7 +1,7 @@
 return {
   {
     "hrsh7th/nvim-cmp",
-    name = "cmp"
+    name = "cmp",
   },
   {
     "hrsh7th/cmp-nvim-lsp",
@@ -9,7 +9,7 @@ return {
     dependencies = {
       "cmp",
       "saadparwaiz1/cmp_luasnip",
-      "L3MON4D3/LuaSnip"
-    }
-  }
+      "L3MON4D3/LuaSnip",
+    },
+  },
 }
