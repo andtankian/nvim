@@ -1,15 +1,15 @@
 local lsps = {
-	"lua_ls",
-	"eslint",
-	"tsserver",
+  "lua_ls",
+  "eslint",
+  "tsserver",
 }
 
 local formatters = {
-	"prettierd",
-	"stylua",
+  "prettierd",
+  "stylua",
 }
 
 return {
-	lsps = lsps,
-	formatters = formatters,
+  lsps = lsps,
+  formatters = formatters,
 }
