@@ -12,12 +12,19 @@ return {
         "filesystem",
       },
       use_popups_for_input = false, -- If false, inputs will use vim.ui.input() instead of custom floats.
-      {
-        event = "file_opened",
-        handler = function()
-          require("neo-tree.command").execute({ action = "close" })
-          require("neo-tree.sources.filesystem").reset_search()
-        end
+      event_handlers = {
+        {
+          event = "file_opened",
+          handler = function()
+            require("neo-tree.command").execute({ action = "close" })
+          end
+        },
+        {
+          event = "neo_tree_window_after_open",
+          handler = function()
+            vim.cmd("setlocal rnu")
+          end
+        }
       },
       default_component_configs = {
         -- If you don't want to use these columns, you can set `enabled = false` for each of them individually
