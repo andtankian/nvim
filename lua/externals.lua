@@ -6,7 +6,6 @@ local lsps = {
 
 local formatters = {
   "prettierd",
-  "stylua",
 }
 
 return {
