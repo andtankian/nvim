@@ -5,7 +5,7 @@ local lsps = {
 }
 
 local formatters = {
-	"prettierd",
+	"prettier",
 	"stylua",
 }
 
