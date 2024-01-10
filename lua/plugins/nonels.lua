@@ -7,7 +7,10 @@ return {
 
 		nonels.setup({
 			sources = {
-				builtins.formatting.prettierd,
+				builtins.formatting.prettierd.with({
+					filetypes = { "javascript", "typescript", "json" },
+				}),
+				builtins.formatting.stylua,
 			},
 		})
 	end,
