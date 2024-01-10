@@ -64,7 +64,7 @@ return {
           visible = false,
           show_hidden_count = true, -- when true, the number of hidden items in each folder will be shown as the last entry
           hide_dotfiles = false,
-          hide_gitignored = false,
+          hide_gitignored = true,
         },
       },
     }
