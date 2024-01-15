@@ -60,6 +60,7 @@ return {
 			local builtin = require("telescope.builtin")
 
 			keymap.set("n", "<leader>ff", builtin.find_files, {})
+			keymap.set("n", "<leader>fb", builtin.buffers, {})
 			keymap.set("n", "<leader>fw", builtin.live_grep, {})
 			keymap.set("n", "<leader>gt", builtin.git_status, {})
 			keymap.set("n", "<leader>fgb", builtin.git_branches, {})

@@ -1,4 +1,5 @@
 local opt = vim.opt
+local o = vim.o
 
 opt.scrolloff = 8
 opt.laststatus = 3
@@ -37,3 +38,10 @@ opt.undofile = true
 
 -- interval for writing swap file to disk, also used by gitsigns
 opt.updatetime = 250
+
+-- related to folding
+o.foldcolumn = "0"
+o.foldlevel = 99
+o.foldlevelstart = 99
+o.foldenable = true
+o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]

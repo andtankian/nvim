@@ -11,6 +11,11 @@ return {
 
 		local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
+		capabilities.textDocument.foldingRange = {
+			dynamicRegistration = false,
+			lineFoldingOnly = true,
+		}
+
 		for _, lsp in ipairs(externals.lsps) do
 			lspconfig[lsp].setup({
 				capabilities = capabilities,
@@ -31,6 +36,8 @@ return {
 		vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
 		vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
 
+		-- Restart lsp server
+		vim.keymap.set("n", "<leader>lr", ":LspRestart<CR>", { silent = true, noremap = true })
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 			callback = function(ev)
