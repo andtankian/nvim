@@ -5,6 +5,12 @@ return {
 	dependencies = {
 		"mason-lspconfig",
 		"cmp-lsp",
+		{
+			"linrongbin16/lsp-progress.nvim",
+			config = function()
+				require("lsp-progress").setup()
+			end,
+		},
 	},
 	config = function()
 		local lspconfig = require("lspconfig")
