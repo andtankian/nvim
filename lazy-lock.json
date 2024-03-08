@@ -12,7 +12,7 @@
   "copilot.vim": { "branch": "release", "commit": "037f594103af5f0e585254278e654ba42cebda07" },
   "gitsigns.nvim": { "branch": "main", "commit": "2c2463dbd82eddd7dbab881c3a62cfbfbe3c67ae" },
   "indent-blankline.nvim": { "branch": "master", "commit": "821a7acd88587d966f7e464b0b3031dfe7f5680c" },
-  "lazy.nvim": { "branch": "main", "commit": "aedcd79811d491b60d0a6577a9c1701063c2a609" },
+  "lazy.nvim": { "branch": "main", "commit": "83493db50a434a4c5c648faf41e2ead80f96e478" },
   "lsp-progress.nvim": { "branch": "main", "commit": "b673377c50ebaf37053f23cc3caeeb6d469ba1c1" },
   "lualine.nvim": { "branch": "master", "commit": "8b56462bfb746760465264de41b4907310f113ec" },
   "mason": { "branch": "main", "commit": "3b5068f0fc565f337d67a2d315d935f574848ee7" },
