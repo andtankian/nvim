@@ -6,7 +6,7 @@ return {
 		"xiyaowong/transparent.nvim",
 	},
 	config = function()
-		vim.cmd.colorscheme("catppuccin-mocha")
+		vim.cmd.colorscheme("catppuccin-frappe")
 		require("transparent").setup()
 	end,
 }
