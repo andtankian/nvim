@@ -19,12 +19,6 @@ return {
 						require("neo-tree.command").execute({ action = "close" })
 					end,
 				},
-				{
-					event = "neo_tree_window_after_open",
-					handler = function()
-						vim.cmd("setlocal rnu")
-					end,
-				},
 			},
 			default_component_configs = {
 				-- If you don't want to use these columns, you can set `enabled = false` for each of them individually

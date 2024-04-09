@@ -1,3 +1,0 @@
-return {
-	"mattkubej/jest.nvim",
-}

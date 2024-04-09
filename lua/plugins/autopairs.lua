@@ -1,5 +1,18 @@
 return {
-	"windwp/nvim-autopairs",
-	event = "InsertEnter",
-	opts = {},
+	{
+		"nvim-ts-autotag",
+	},
+	{
+		"windwp/nvim-autopairs",
+		event = "InsertEnter",
+		opts = {},
+	},
+	{
+		"kylechui/nvim-surround",
+		version = "*",
+		event = "VeryLazy",
+		config = function()
+			require("nvim-surround").setup()
+		end,
+	},
 }
