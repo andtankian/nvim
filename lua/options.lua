@@ -1,11 +1,19 @@
 local opt = vim.opt
 local o = vim.o
 
-opt.scrolloff = 8
+-- Amount of lines to scroll when the cursor reaches the end of the screen
+opt.scrolloff = 99
+
+-- Last window should have status line
 opt.laststatus = 3
+
+-- Do not show mode in the status line (default)
 opt.showmode = false
 
+-- Share system clipboard register
 opt.clipboard = "unnamedplus"
+
+-- Highlight current cursor line
 opt.cursorline = true
 
 -- Indenting
@@ -15,15 +23,16 @@ opt.smartindent = true
 opt.tabstop = 2
 opt.softtabstop = 2
 
-opt.fillchars = { eob = " " }
+-- Ignore case when executing commands and searching
 opt.ignorecase = true
+
+-- Override ignore case to some cases
 opt.smartcase = true
 opt.mouse = "a"
 
 -- Numbers
 opt.number = true
 opt.relativenumber = true
-opt.numberwidth = 2
 opt.ruler = false
 
 -- disable nvim intro
