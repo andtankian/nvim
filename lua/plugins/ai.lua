@@ -1,3 +1,5 @@
+local utils = require("utils")
+
 return {
 	{
 		"jackMort/ChatGPT.nvim",
@@ -33,27 +35,29 @@ return {
 			"nvim-lua/plenary.nvim",
 			"nvim-telescope/telescope.nvim",
 		},
-
+		keys = {
+			{
+				"<leader>gpt",
+				"<cmd>ChatGPT<cr>",
+				desc = "Open chatGPT",
+			},
+		},
 		config = function(_, opts)
 			require("chatgpt").setup(opts)
-
-			local keymap = vim.keymap
-
-			keymap.set("n", "<leader>gpt", ":ChatGPT<CR>", { noremap = true, silent = true })
 		end,
 	},
 	{
 		"github/copilot.vim",
 		config = function()
 			local g = vim.g
-			local keymap = vim.keymap
-
 			g.copilot_no_tab_map = true
-			keymap.set(
+
+      -- Change keymapping of <tab> to <C-j> to avoid conflict with nvim comp
+			utils.map(
 				"i",
 				"<C-j>",
 				'copilot#Accept("<cr>")',
-				{ noremap = true, silent = true, expr = true, replace_keycodes = false }
+				{ noremap = true, silent = true, expr = true, replace_keycodes = false, desc = "Accept copilot suggestion" }
 			)
 		end,
 	},
