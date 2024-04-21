@@ -2,7 +2,7 @@ local utils = require("utils")
 
 return {
 	{
-		"jackMort/ChatGPT.nvim",
+		"jackMort/ChatGPT.nvim", -- Chat with GPT-3
 		event = "VeryLazy",
 		opts = {
 			popup_layout = {
@@ -47,7 +47,7 @@ return {
 		end,
 	},
 	{
-		"github/copilot.vim",
+		"github/copilot.vim", -- Copilot
 		config = function()
 			local g = vim.g
 			g.copilot_no_tab_map = true

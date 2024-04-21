@@ -1,18 +1,16 @@
 return {
 	{
-		"nvim-ts-autotag",
+		"nvim-ts-autotag", -- Auto close and auto rename html tags
 	},
 	{
-		"windwp/nvim-autopairs",
-		event = "InsertEnter",
+		"windwp/nvim-autopairs", -- Auto close and auto rename brackets
+		event = "InsertEnter", -- Load on entering insert mode
 		opts = {},
 	},
 	{
-		"kylechui/nvim-surround",
+		"kylechui/nvim-surround", -- Surround text with brackets, quotes, etc.
 		version = "*",
-		event = "VeryLazy",
-		config = function()
-			require("nvim-surround").setup()
-		end,
+		event = "VeryLazy", -- Load on demand
+		opts = {},
 	},
 }
