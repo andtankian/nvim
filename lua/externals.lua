@@ -9,7 +9,10 @@ local formatters = {
 	"stylua",
 }
 
+local linters = {}
+
 return {
 	lsps = lsps,
 	formatters = formatters,
+	linters = linters,
 }
