@@ -4,32 +4,23 @@ return {
 	{
 		"williamboman/mason.nvim",
 		name = "mason",
-		config = function()
-			require("mason").setup()
-		end,
+		opts = {},
 	},
 	{
 		"williamboman/mason-lspconfig.nvim",
 		name = "mason-lspconfig",
-		opts = {
-			ensure_installed = externals.lsps,
-		},
-		config = function(_, opts)
-			require("mason-lspconfig").setup(opts)
-		end,
 		dependencies = {
 			"mason",
+		},
+		opts = {
+			ensure_installed = externals.lsps,
 		},
 	},
 	{
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
-		config = function()
-			local installer = require("mason-tool-installer")
-
-			installer.setup({
-				ensure_installed = externals.formatters,
-			})
-		end,
+		opts = {
+			ensure_installed = vim.tbl_extend("force", externals.formatters, externals.linters),
+		},
 		dependencies = {
 			"mason",
 		},
