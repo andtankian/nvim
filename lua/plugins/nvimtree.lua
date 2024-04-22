@@ -38,6 +38,15 @@ return {
 				resize_window = true,
 			},
 		},
+		on_attach = function(bufnr)
+			local api = require("nvim-tree.api")
+
+			-- default mappings
+			api.config.mappings.default_on_attach(bufnr)
+
+			-- custom override mappings ()
+			vim.keymap.del("n", "<C-t>", { buffer = bufnr}) -- avoid conflict with toggle terminal launch
+		end,
 		renderer = {
 			root_folder_label = false,
 			highlight_git = true,
