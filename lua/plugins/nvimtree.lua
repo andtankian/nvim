@@ -101,7 +101,7 @@ return {
 		)
 		utils.map(
 			"n",
-			"<C-e>",
+			"<leader>e",
 			"<cmd>NvimTreeFocus<CR>",
 			{ desc = "Focus NvimTree File Explorer", noremap = true, silent = true }
 		)
