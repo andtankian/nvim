@@ -1,5 +1,7 @@
+local utils = require("utils")
+
 return {
-	"akinsho/toggleterm.nvim",
+	"akinsho/toggleterm.nvim", -- float terminal plugin
 	version = "*",
 	opts = {
 		open_mapping = "<C-t>",
@@ -8,8 +10,7 @@ return {
 	config = function(_, opts)
 		require("toggleterm").setup(opts)
 
-		local keymap = vim.keymap
-
-		keymap.set("t", "<C-x>", "<C-\\><C-n>")
+    -- Exit terminal mode with <C-x> inside terminal
+		utils.map("t", "<C-x>", "<C-\\><C-n>", { desc = "Exit terminal mode", noremap = true})
 	end,
 }
