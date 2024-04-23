@@ -13,6 +13,9 @@ return {
 			-- For major updates, this must be adjusted manually.
 			version = "^1.0.0",
 		},
+		{
+			"xiyaowong/telescope-emoji.nvim",
+		},
 	},
 	opts = {
 		defaults = {
@@ -74,11 +77,13 @@ return {
 		{ "<leader>fgh", require("telescope.builtin").git_bcommits, desc = "Git bcommits" },
 		{ "<leader>fr", require("telescope.builtin").resume, desc = "Resume last telescope" },
 		{ "<leader>fo", require("telescope.builtin").oldfiles, desc = "Old files" },
+		{ "<leader>fe", ":Telescope emoji<cr>", desc = "Emoji" },
 	},
 	config = function(_, opts)
 		local telescope = require("telescope")
 		telescope.setup(opts)
 		telescope.load_extension("fzf")
 		telescope.load_extension("live_grep_args")
+		telescope.load_extension("emoji")
 	end,
 }
