@@ -41,7 +41,7 @@ return {
 		event = "VimEnter",
 		opts = {
 			options = {
-				theme = "dracula",
+				theme = "tokyonight",
 			},
 		},
 	},
