@@ -2,6 +2,7 @@ local lsps = {
 	"lua_ls",
 	"eslint",
 	"tsserver",
+	"jsonls",
 }
 
 local formatters = {
