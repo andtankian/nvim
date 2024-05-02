@@ -12,6 +12,7 @@ return {
 				typescript = { "prettier" },
 				typescriptreact = { "prettier" },
 				json = { "prettier" },
+				yaml = { "yamlfmt" },
 			},
 		},
 	},

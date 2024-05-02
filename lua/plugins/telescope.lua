@@ -19,6 +19,12 @@ return {
 		},
 	},
 	opts = {
+		pickers = {
+			find_files = {
+				hidden = true,
+				find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
+			},
+		},
 		defaults = {
 			sorting_strategy = "ascending",
 			selection_strategy = "follow",

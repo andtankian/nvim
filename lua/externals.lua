@@ -8,6 +8,7 @@ local lsps = {
 local formatters = {
 	"prettier",
 	"stylua",
+  "yamlfmt"
 }
 
 local linters = {}
