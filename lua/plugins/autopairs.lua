@@ -1,6 +1,6 @@
 return {
 	{
-		"nvim-ts-autotag", -- Auto close and auto rename html tags
+		"windwp/nvim-ts-autotag", -- Auto close and auto rename html tags
 	},
 	{
 		"windwp/nvim-autopairs", -- Auto close and auto rename brackets
