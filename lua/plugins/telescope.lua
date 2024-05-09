@@ -102,6 +102,18 @@ return {
 	},
 	config = function(_, opts)
 		local telescope = require("telescope")
+		local lga_actions = require("telescope-live-grep-args.actions")
+
+		-- this is an override to quote prompt with <C-k> using live_grep_args extension
+		opts.extensions.live_grep_args.mappings = {
+			i = {
+				["<C-k>"] = lga_actions.quote_prompt(),
+				["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
+			},
+		}
+
+		OMG = opts
+
 		telescope.setup(opts)
 		telescope.load_extension("fzf")
 		telescope.load_extension("live_grep_args")
