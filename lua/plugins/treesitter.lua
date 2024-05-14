@@ -10,6 +10,7 @@ return {
 				"typescript",
 				"javascript",
 				"tsx",
+				"terraform",
 			},
 			highlight = { enable = true },
 			indent = { enable = true },

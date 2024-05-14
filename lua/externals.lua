@@ -3,6 +3,7 @@ local lsps = {
 	"eslint",
 	"tsserver",
 	"jsonls",
+  "terraformls"
 }
 
 local formatters = {

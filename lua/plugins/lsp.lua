@@ -13,6 +13,7 @@ return {
 				typescriptreact = { "prettier" },
 				json = { "prettier" },
 				yaml = { "yamlfmt" },
+        terraform = { "terraform_fmt" },
 			},
 		},
 	},
