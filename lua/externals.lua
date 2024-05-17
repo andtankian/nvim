@@ -3,16 +3,18 @@ local lsps = {
 	"eslint",
 	"tsserver",
 	"jsonls",
-  "terraformls"
+	"terraformls",
 }
 
 local formatters = {
 	"prettier",
 	"stylua",
-  "yamlfmt"
+	"yamlfmt",
 }
 
-local linters = {}
+local linters = {
+	"tflint",
+}
 
 return {
 	lsps = lsps,
