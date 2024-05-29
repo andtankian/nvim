@@ -1,5 +1,3 @@
-local utils = require("utils")
-
 return {
 	{
 		"jackMort/ChatGPT.nvim", -- Chat with GPT-3
@@ -47,18 +45,14 @@ return {
 		end,
 	},
 	{
-		"github/copilot.vim", -- Copilot
-		config = function()
-			local g = vim.g
-			g.copilot_no_tab_map = true
-
-      -- Change keymapping of <tab> to <C-j> to avoid conflict with nvim comp
-			utils.map(
-				"i",
-				"<C-j>",
-				'copilot#Accept("<cr>")',
-				{ noremap = true, silent = true, expr = true, replace_keycodes = false, desc = "Accept copilot suggestion" }
-			)
-		end,
+		"zbirenbaum/copilot.lua", -- Copilot
+		opts = {
+			suggestion = {
+				auto_trigger = true,
+				keymap = {
+					accept = "<C-j>",
+				},
+			},
+		},
 	},
 }

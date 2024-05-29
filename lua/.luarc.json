@@ -1,6 +1,6 @@
 {
-    "diagnostics.globals": [
-        "vim",
-        "close_all_buffers"
-    ]
+  "diagnostics.globals": [
+    "vim",
+    "close_all_buffers"
+  ]
 }
