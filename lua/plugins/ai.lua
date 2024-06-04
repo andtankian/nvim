@@ -1,3 +1,5 @@
+local utils = require("utils")
+
 return {
 	{
 		"jackMort/ChatGPT.nvim", -- Chat with GPT-3
@@ -45,13 +47,12 @@ return {
 		end,
 	},
 	{
-		"zbirenbaum/copilot.lua", -- Copilot
+		"supermaven-inc/supermaven-nvim", -- Copilot
 		opts = {
-			suggestion = {
-				auto_trigger = true,
-				keymap = {
-					accept = "<C-j>",
-				},
+			keymaps = {
+				accept_suggestion = "<C-j>",
+				clear_suggestion = "<C-]>",
+				accept_word = "<C-k>",
 			},
 		},
 	},
