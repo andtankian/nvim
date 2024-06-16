@@ -1,6 +1,8 @@
 return {
 	{
 		"windwp/nvim-ts-autotag", -- Auto close and auto rename html tags
+		opts = {},
+		lazy = false, -- disable lazy loading
 	},
 	{
 		"windwp/nvim-autopairs", -- Auto close and auto rename brackets
