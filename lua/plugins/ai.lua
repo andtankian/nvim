@@ -1,5 +1,3 @@
-local utils = require("utils")
-
 return {
 	{
 		"jackMort/ChatGPT.nvim", -- Chat with GPT-3
