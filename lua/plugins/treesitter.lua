@@ -11,6 +11,7 @@ return {
 				"javascript",
 				"tsx",
 				"terraform",
+        "vimdoc"
 			},
 			highlight = { enable = true },
 			indent = { enable = true },
