@@ -15,7 +15,10 @@ return {
 		dependencies = {
 			"xiyaowong/transparent.nvim",
 		},
-		config = function() end,
+		opts = {},
+		config = function()
+			vim.cmd("colorscheme catppuccin-macchiato")
+		end,
 	},
 	{
 		"folke/tokyonight.nvim",
@@ -55,7 +58,7 @@ return {
 				end,
 			})
 
-			vim.cmd("colorscheme tokyonight-night")
+			-- vim.cmd("colorscheme tokyonight-night")
 		end,
 	},
 }
