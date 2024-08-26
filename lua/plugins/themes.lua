@@ -4,7 +4,6 @@ return {
 	},
 	-- {
 	-- 	"xiyaowong/transparent.nvim",
- --    opts = {},
 	-- 	config = function()
 	-- 		require("transparent").setup()
 	-- 	end,
