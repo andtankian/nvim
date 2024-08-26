@@ -2,12 +2,13 @@ return {
 	{
 		"NvChad/nvim-colorizer.lua",
 	},
-	{
-		"xiyaowong/transparent.nvim",
-		config = function()
-			require("transparent").setup()
-		end,
-	},
+	-- {
+	-- 	"xiyaowong/transparent.nvim",
+ --    opts = {},
+	-- 	config = function()
+	-- 		require("transparent").setup()
+	-- 	end,
+	-- },
 	{
 		"catppuccin/nvim",
 		name = "catppuccin",
