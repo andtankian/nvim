@@ -2,7 +2,7 @@ local opt = vim.opt
 local o = vim.o
 
 -- Amount of lines to scroll when the cursor reaches the end of the screen
-opt.scrolloff = 99
+opt.scrolloff = 10
 
 -- Last window should have status line
 opt.laststatus = 3
