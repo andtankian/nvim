@@ -1,49 +1,6 @@
+local utils = require("utils")
+
 return {
-	{
-		"jackMort/ChatGPT.nvim", -- Chat with GPT-3
-		event = "VeryLazy",
-		opts = {
-			popup_layout = {
-				center = {
-					width = "90%",
-					height = "90%",
-				},
-			},
-			openai_params = {
-				model = "gpt-4o-mini",
-				frequency_penalty = 0,
-				presence_penalty = 0,
-				max_tokens = 4096,
-				temperature = 0,
-				top_p = 1,
-				n = 1,
-			},
-			openai_edit_params = {
-				model = "gpt-4o-mini",
-				frequency_penalty = 0,
-				presence_penalty = 0,
-				max_tokens = 4096,
-				temperature = 0,
-				top_p = 1,
-				n = 1,
-			},
-		},
-		dependencies = {
-			"MunifTanjim/nui.nvim",
-			"nvim-lua/plenary.nvim",
-			"nvim-telescope/telescope.nvim",
-		},
-		keys = {
-			{
-				"<leader>gpt",
-				"<cmd>ChatGPT<cr>",
-				desc = "Open chatGPT",
-			},
-		},
-		config = function(_, opts)
-			require("chatgpt").setup(opts)
-		end,
-	},
 	{
 		"supermaven-inc/supermaven-nvim", -- Copilot
 		opts = {
@@ -53,5 +10,34 @@ return {
 				accept_word = "<C-k>",
 			},
 		},
+	},
+	{
+		"olimorris/codecompanion.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+			"hrsh7th/nvim-cmp", -- Optional: For using slash commands and variables in the chat buffer
+			"nvim-telescope/telescope.nvim", -- Optional: For using slash commands
+			{ "stevearc/dressing.nvim", opts = {} }, -- Optional: Improves `vim.ui.select`
+		},
+		opts = {
+			strategies = {
+				chat = {
+					adapter = "anthropic",
+				},
+				inline = {
+					adapter = "anthropic",
+				},
+				agent = {
+					adapter = "anthropic",
+				},
+			},
+		},
+		config = function(_, opts)
+			require("codecompanion").setup(opts)
+
+			utils.map("n", "<leader>cc", "<cmd>CodeCompanionChat Toggle<cr>", { noremap = true, silent = true })
+			vim.api.nvim_create_user_command("Cc", "CodeCompanion <args>", { nargs = "*" })
+		end,
 	},
 }
