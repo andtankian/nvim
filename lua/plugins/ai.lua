@@ -37,6 +37,7 @@ return {
 			require("codecompanion").setup(opts)
 
 			utils.map("n", "<leader>cc", "<cmd>CodeCompanionChat Toggle<cr>", { noremap = true, silent = true })
+			utils.map("v", "<leader>cc", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
 			vim.api.nvim_create_user_command("Cc", "CodeCompanion <args>", { nargs = "*" })
 		end,
 	},
