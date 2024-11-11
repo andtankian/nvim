@@ -12,7 +12,7 @@ return {
 		},
 	},
 	{
-		-- "olimorris/codecompanion.nvim",
+		"olimorris/codecompanion.nvim",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-treesitter/nvim-treesitter",
@@ -40,9 +40,9 @@ return {
 				},
 			},
 		},
-		dir = "~/dev/codecompanion.nvim",
-		name = "codecompanion.nvim",
-		dev = true,
+		-- dir = "~/dev/codecompanion.nvim",
+		-- name = "codecompanion.nvim",
+		-- dev = true,
 		config = function(_, opts)
 			require("codecompanion").setup(opts)
 
