@@ -12,7 +12,7 @@ return {
 		},
 	},
 	{
-		"olimorris/codecompanion.nvim",
+		-- "olimorris/codecompanion.nvim",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-treesitter/nvim-treesitter",
@@ -24,6 +24,13 @@ return {
 			strategies = {
 				chat = {
 					adapter = "anthropic",
+					slash_commands = {
+						["buffer"] = {
+							opts = {
+								provider = "telescope",
+							},
+						},
+					},
 				},
 				inline = {
 					adapter = "anthropic",
@@ -33,6 +40,9 @@ return {
 				},
 			},
 		},
+		dir = "~/dev/codecompanion.nvim",
+		name = "codecompanion.nvim",
+		dev = true,
 		config = function(_, opts)
 			require("codecompanion").setup(opts)
 

@@ -110,7 +110,7 @@ return {
 		buffer_searcher = function()
 			builtin.buffers({
 				sort_mru = true,
-				ignore_current_buffer = false,
+				ignore_current_buffer = true,
 				show_all_buffers = true,
 				attach_mappings = function(prompt_bufnr, map)
 					local refresh_buffer_searcher = function()
@@ -118,24 +118,26 @@ return {
 						vim.schedule(buffer_searcher)
 					end
 
-					local delete_buf = function()
-						local selection = action_state.get_selected_entry()
-						vim.api.nvim_buf_delete(selection.bufnr, { force = true })
-						refresh_buffer_searcher()
-					end
-
 					local delete_multiple_buf = function()
 						local picker = action_state.get_current_picker(prompt_bufnr)
 						local selection = picker:get_multi_selection()
-						for _, entry in ipairs(selection) do
-							vim.api.nvim_buf_delete(entry.bufnr, { force = true })
+
+						if #selection == 0 then
+							-- Delete current selection if no multi-selection
+							local entry = action_state.get_selected_entry()
+							if entry then
+								vim.api.nvim_buf_delete(entry.bufnr, { force = true })
+							end
+						else
+							-- Delete all selected buffers
+							for _, entry in ipairs(selection) do
+								vim.api.nvim_buf_delete(entry.bufnr, { force = true })
+							end
 						end
 						refresh_buffer_searcher()
 					end
 
-					map("n", "dd", delete_buf)
-					map("n", "<C-d>", delete_multiple_buf)
-					map("i", "<C-d>", delete_multiple_buf)
+					map("n", "x", delete_multiple_buf)
 
 					return true
 				end,
