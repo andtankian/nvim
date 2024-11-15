@@ -98,6 +98,7 @@ return {
 		{ "<leader>fr", require("telescope.builtin").resume, desc = "Resume last telescope" },
 		{ "<leader>fo", require("telescope.builtin").oldfiles, desc = "Old files" },
 		{ "<leader>fe", ":Telescope emoji<cr>", desc = "Emoji" },
+		{ "<leader>th", ":Telescope themes<cr>", desc = "Nvchad Themes" },
 	},
 	config = function(_, opts)
 		local telescope = require("telescope")
