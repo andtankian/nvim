@@ -9,7 +9,7 @@ local M = {
 		},
 	},
 	base46 = {
-		theme = "monekai",
+		theme = "tokyodark",
 	},
 }
 
