@@ -21,6 +21,11 @@ return {
 			{ "stevearc/dressing.nvim", opts = {} }, -- Optional: Improves `vim.ui.select`
 		},
 		opts = {
+			display = {
+				chat = {
+					show_header_separator = false,
+				},
+			},
 			strategies = {
 				chat = {
 					adapter = "anthropic",
