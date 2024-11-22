@@ -6,6 +6,9 @@ return {
 			local configs = require("nvim-treesitter.configs")
 
 			configs.setup({
+				auto_install = true,
+				sync_install = true,
+				ignore_install = {},
 				ensure_installed = {
 					"lua",
 					"typescript",
@@ -13,6 +16,7 @@ return {
 					"tsx",
 					"terraform",
 					"vimdoc",
+					"graphql",
 				},
 				highlight = { enable = true },
 				indent = { enable = true },
