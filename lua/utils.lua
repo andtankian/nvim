@@ -8,7 +8,7 @@ end
 M.override_filetype = function()
 	vim.filetype.add({
 		extension = {
-			tfvars = "terraforma",
+			tfvars = "terraform",
 		},
 	})
 end
