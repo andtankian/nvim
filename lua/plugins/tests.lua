@@ -7,8 +7,10 @@ return {
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 		},
-		-- dir = "~/dev/nxtest.nvim",
-		-- name = "nxtest.nvim",
+		dir = "~/dev/nxtest.nvim",
+		name = "nxtest.nvim",
+		dev = true,
 		opts = {},
 	},
 }
+
