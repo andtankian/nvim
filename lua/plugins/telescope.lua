@@ -108,7 +108,7 @@ return {
 		local action_state = require("telescope.actions.state")
 		local actions = require("telescope.actions")
 
-		buffer_searcher = function()
+		Buffer_searcher = function()
 			builtin.buffers({
 				sort_mru = true,
 				ignore_current_buffer = true,
@@ -116,7 +116,7 @@ return {
 				attach_mappings = function(prompt_bufnr, map)
 					local refresh_buffer_searcher = function()
 						actions.close(prompt_bufnr)
-						vim.schedule(buffer_searcher)
+						vim.schedule(Buffer_searcher)
 					end
 
 					local delete_multiple_buf = function()
@@ -145,7 +145,7 @@ return {
 			})
 		end
 
-		utils.map("n", "<leader>fb", buffer_searcher, {
+		utils.map("n", "<leader>fb", Buffer_searcher, {
 			desc = "List buffers",
 		})
 

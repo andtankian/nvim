@@ -4,6 +4,8 @@ return {
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 		},
-		opts = {},
+		opts = {
+			terminal_position = "buffer",
+		},
 	},
 }
