@@ -96,4 +96,8 @@ return {
 		},
 		opts = {},
 	},
+	{
+		"sindrets/diffview.nvim",
+		opts = {},
+	},
 }

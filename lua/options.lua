@@ -34,11 +34,12 @@ opt.mouse = "a"
 opt.number = true
 opt.relativenumber = true
 opt.ruler = false
+opt.signcolumn = "yes:1"
+opt.numberwidth = 1
 
 -- disable nvim intro
 opt.shortmess:append("sI")
 
-opt.signcolumn = "yes"
 opt.splitbelow = true
 opt.splitright = true
 opt.termguicolors = true
@@ -53,4 +54,3 @@ o.foldcolumn = "0"
 o.foldlevel = 99
 o.foldlevelstart = 99
 o.foldenable = true
-o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]

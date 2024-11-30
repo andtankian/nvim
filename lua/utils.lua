@@ -44,12 +44,15 @@ M.override_hl_groups = function()
 	local diff_delete = blend_colors(bg_color, "#FF0000", 0.1) -- Blend with red
 	local diff_change = blend_colors(bg_color, "#FFFF00", 0.1) -- Blend with yellow
 	local diff_text = blend_colors(bg_color, "#FFFF00", 0.2) -- Blend with yellow, stronger
+	local dap_stopped = blend_colors(bg_color, "#ef4000", 0.8) -- Blend with orange, stronger
 
 	-- Apply the highlight groups
 	vim.api.nvim_set_hl(0, "DiffAdd", { fg = "NONE", bg = diff_add })
 	vim.api.nvim_set_hl(0, "DiffDelete", { fg = "NONE", bg = diff_delete })
 	vim.api.nvim_set_hl(0, "DiffChange", { fg = "NONE", bg = diff_change })
 	vim.api.nvim_set_hl(0, "DiffText", { fg = "NONE", bg = diff_text })
+	vim.api.nvim_set_hl(0, "DapBreakpoint", { fg = "#ef4000" })
+	vim.api.nvim_set_hl(0, "DapStopped", { fg = dap_stopped })
 end
 
 M.override_filetype = function()
@@ -60,10 +63,26 @@ M.override_filetype = function()
 	})
 end
 
+M.override_signs = function()
+	vim.fn.sign_define("DapBreakpoint", {
+		text = "",
+		texthl = "DapBreakpoint",
+		linehl = "",
+		numhl = "",
+	})
+	vim.fn.sign_define("DapStopped", {
+		text = "󰮺",
+		texthl = "DapStopped",
+		linehl = "",
+		numhl = "",
+	})
+end
 
+-- Modify the override_all function to include the new override_signs
 M.override_all = function()
 	M.override_filetype()
 	M.override_hl_groups()
+	M.override_signs()
 end
 
 return M

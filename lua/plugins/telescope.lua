@@ -6,7 +6,6 @@ return {
 	dependencies = {
 
 		"nvim-lua/plenary.nvim",
-		{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 		{ "xiyaowong/telescope-emoji.nvim" },
 		{
 			"nvim-telescope/telescope-live-grep-args.nvim",
@@ -17,6 +16,7 @@ return {
 		{
 			"xiyaowong/telescope-emoji.nvim",
 		},
+		{ "aaronhallaert/advanced-git-search.nvim", cmd = { "AdvancedGitSearch" } },
 	},
 	opts = {
 		pickers = {
@@ -71,6 +71,9 @@ return {
 					"!**/.git/*",
 				},
 			},
+			advanced_git_search = {
+				diff_plugin = "diffview",
+			},
 		},
 	},
 	keys = {
@@ -86,9 +89,10 @@ return {
 			"<leader>gc",
 			function()
 				local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
-				live_grep_args_shortcuts.grep_word_under_cursor()
+				live_grep_args_shortcuts.grep_visual_selection()
 			end,
 			desc = "Grep word under cursor",
+			mode = "v",
 		},
 		{ "<leader>gt", require("telescope.builtin").git_status, desc = "Git status" },
 		{ "<leader>fgb", require("telescope.builtin").git_branches, desc = "Git branches" },
@@ -158,8 +162,8 @@ return {
 		}
 
 		telescope.setup(opts)
-		telescope.load_extension("fzf")
 		telescope.load_extension("live_grep_args")
 		telescope.load_extension("emoji")
+		telescope.load_extension("advanced_git_search")
 	end,
 }
