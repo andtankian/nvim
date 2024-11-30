@@ -2,7 +2,7 @@ local utils = require("utils")
 
 return {
 	{
-		"supermaven-inc/supermaven-nvim", -- Copilot
+		"supermaven-inc/supermaven-nvim",
 		opts = {
 			keymaps = {
 				accept_suggestion = "<C-j>",
@@ -16,9 +16,9 @@ return {
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-treesitter/nvim-treesitter",
-			"hrsh7th/nvim-cmp", -- Optional: For using slash commands and variables in the chat buffer
-			"nvim-telescope/telescope.nvim", -- Optional: For using slash commands
-			{ "stevearc/dressing.nvim", opts = {} }, -- Optional: Improves `vim.ui.select`
+			"hrsh7th/nvim-cmp",
+			"nvim-telescope/telescope.nvim",
+			{ "stevearc/dressing.nvim", opts = {} },
 		},
 		opts = {
 			display = {
@@ -45,9 +45,6 @@ return {
 				},
 			},
 		},
-		-- dir = "~/dev/codecompanion.nvim",
-		-- name = "codecompanion.nvim",
-		-- dev = true,
 		config = function(_, opts)
 			require("codecompanion").setup(opts)
 

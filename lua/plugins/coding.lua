@@ -3,24 +3,86 @@ local utils = require("utils")
 
 return {
 	{
-		"stevearc/conform.nvim", -- formatter plugin
-		name = "conform",
+		"hrsh7th/cmp-nvim-lsp",
+		name = "cmp-lsp",
+	},
+	{
+		"hrsh7th/nvim-cmp",
+		dependencies = {
+			"cmp-lsp",
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-path",
+			"L3MON4D3/LuaSnip",
+			"saadparwaiz1/cmp_luasnip",
+		},
+		config = function()
+			local cmp = require("cmp")
+			local luasnip = require("luasnip")
+
+			cmp.setup({
+				snippet = {
+					expand = function(args)
+						luasnip.lsp_expand(args.body)
+					end,
+				},
+				mapping = cmp.mapping.preset.insert({
+					["<C-u>"] = cmp.mapping.scroll_docs(-4),
+					["<C-d>"] = cmp.mapping.scroll_docs(4),
+					["<C-Space>"] = cmp.mapping.complete(),
+					["<CR>"] = cmp.mapping.confirm({
+						behavior = cmp.ConfirmBehavior.Replace,
+						select = true,
+					}),
+					["<Tab>"] = cmp.mapping(function(fallback)
+						if cmp.visible() then
+							cmp.select_next_item()
+						elseif luasnip.expand_or_jumpable() then
+							luasnip.expand_or_jump()
+						else
+							fallback()
+						end
+					end, { "i", "s" }),
+					["<S-Tab>"] = cmp.mapping(function(fallback)
+						if cmp.visible() then
+							cmp.select_prev_item()
+						elseif luasnip.jumpable(-1) then
+							luasnip.jump(-1)
+						else
+							fallback()
+						end
+					end, { "i", "s" }),
+				}),
+				sources = {
+					{ name = "nvim_lsp" },
+					{ name = "buffer" },
+				},
+			})
+		end,
+	},
+	{
+		"williamboman/mason.nvim",
+		name = "mason",
+		opts = {},
+	},
+	{
+		"williamboman/mason-lspconfig.nvim",
+		name = "mason-lspconfig",
+		dependencies = {
+			"mason",
+		},
 		opts = {
-			formatters_by_ft = {
-				lua = { "stylua" },
-				javascript = { "prettier" },
-				typescript = { "prettier" },
-				typescriptreact = { "prettier" },
-				json = { "prettier" },
-				yaml = { "yamlfmt" },
-				terraform = { "terraform_fmt" },
-			},
+			ensure_installed = externals.lsps,
 		},
 	},
-	-- nvim lint not used because for js/ts we have an lsp (eslint-lsp) so we don't need additional linter
-	-- {
-	-- 	"mfussenegger/nvim-lint",
-	-- },
+	{
+		"WhoIsSethDaniel/mason-tool-installer.nvim",
+		opts = {
+			ensure_installed = vim.tbl_extend("force", externals.formatters, externals.linters),
+		},
+		dependencies = {
+			"mason",
+		},
+	},
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
@@ -49,19 +111,15 @@ return {
 				settings = {
 					Lua = {
 						runtime = {
-							-- Tell the language server which version of Lua you're using
 							version = "LuaJIT",
 						},
 						diagnostics = {
-							-- Get the language server to recognize the `vim` global
 							globals = { "vim" },
 						},
 						workspace = {
-							-- Make the server aware of Neovim runtime files
 							library = vim.api.nvim_get_runtime_file("", true),
 							checkThirdParty = false,
 						},
-						-- Do not send telemetry data
 						telemetry = {
 							enable = false,
 						},
@@ -77,7 +135,6 @@ return {
 				end
 			end
 
-			-- eslint specific
 			lspconfig.eslint.setup({
 				capabilities = capabilities,
 				settings = {
@@ -89,7 +146,6 @@ return {
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 				callback = function(ev)
-					-- Buffer local mappings.
 					local opts = { buffer = ev.buf }
 					utils.map("n", "gd", vim.lsp.buf.definition, opts)
 					utils.map("n", "K", vim.lsp.buf.hover, opts)
@@ -111,5 +167,43 @@ return {
 				end,
 			})
 		end,
+	},
+	{
+		"stevearc/conform.nvim",
+		name = "conform",
+		opts = {
+			formatters_by_ft = {
+				lua = { "stylua" },
+				javascript = { "prettier" },
+				typescript = { "prettier" },
+				typescriptreact = { "prettier" },
+				json = { "prettier" },
+				yaml = { "yamlfmt" },
+				terraform = { "terraform_fmt" },
+			},
+		},
+	},
+	{
+		"numToStr/Comment.nvim",
+		opts = {},
+		lazy = false,
+	},
+	{
+		"folke/todo-comments.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		opts = {},
+	},
+	{
+		"tpope/vim-abolish",
+	},
+	{
+		"tversteeg/registers.nvim",
+		cmd = "Registers",
+		config = true,
+		keys = {
+			{ '"', mode = { "n", "v" } },
+			{ "<C-R>", mode = "i" },
+		},
+		name = "registers",
 	},
 }

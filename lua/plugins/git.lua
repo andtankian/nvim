@@ -1,9 +1,9 @@
 return {
 	{
-		"tpope/vim-fugitive", -- git functionality
+		"tpope/vim-fugitive",
 	},
 	{
-		"lewis6991/gitsigns.nvim", -- git sign
+		"lewis6991/gitsigns.nvim",
 		event = "BufEnter",
 		keys = {
 			{
@@ -66,27 +66,10 @@ return {
 				end,
 				desc = "Blame line",
 			},
-			{
-				"<leader>hd",
-				function()
-					require("gitsigns").diffthis()
-				end,
-				desc = "Diff this",
-			},
-			{
-				"<leader>hD",
-				function()
-					require("gitsigns").diffthis("~")
-				end,
-				desc = "Diff this (against HEAD)",
-			},
 		},
 		opts = {
 			current_line_blame = true,
 		},
-		config = function(_, opts)
-			require("gitsigns").setup(opts)
-		end,
 	},
 	{
 		"pwntester/octo.nvim",
@@ -98,6 +81,11 @@ return {
 	},
 	{
 		"sindrets/diffview.nvim",
+		keys = {
+			{ "<leader>dv", "<cmd>DiffviewOpen<cr>", desc = "Open diffview" },
+			{ "<leader>dg", "<cmd>DiffviewClose<cr>", desc = "Close diffview" },
+			{ "<leader>hd", "<cmd>DiffviewFileHistory %<cr>", desc = "Current File history" },
+		},
 		opts = {},
 	},
 }
