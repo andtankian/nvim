@@ -23,7 +23,6 @@ require("lazy").setup({
 		{ import = "plugins" },
 	},
 	install = { colorscheme = { "tokyonight" } },
-	checker = { enabled = true },
 })
 
 for _, v in ipairs(vim.fn.readdir(vim.g.base46_cache)) do
