@@ -66,6 +66,13 @@ return {
 				end,
 				desc = "Blame line",
 			},
+			{
+				"<leader>hd",
+				function()
+					require("gitsigns").diffthis()
+				end,
+				desc = "Diff this",
+			},
 		},
 		opts = {
 			current_line_blame = true,
@@ -84,7 +91,7 @@ return {
 		keys = {
 			{ "<leader>dv", "<cmd>DiffviewOpen<cr>", desc = "Open diffview" },
 			{ "<leader>dg", "<cmd>DiffviewClose<cr>", desc = "Close diffview" },
-			{ "<leader>hd", "<cmd>DiffviewFileHistory %<cr>", desc = "Current File history" },
+			{ "<leader>hD", "<cmd>DiffviewFileHistory %<cr>", desc = "Current File history" },
 		},
 		opts = {},
 	},

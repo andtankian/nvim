@@ -17,24 +17,11 @@ return {
 				dap.configurations[language] = {
 					{
 						type = "pwa-node",
-						request = "launch",
-						name = "Launch file",
-						program = "${file}",
-						cwd = vim.fn.getcwd(),
-						sourceMaps = true,
-					},
-					{
-						type = "pwa-node",
 						request = "attach",
 						name = "Attach",
 						processId = require("dap.utils").pick_process,
 						cwd = vim.fn.getcwd(),
 						sourceMaps = true,
-					},
-					{
-						name = "----- ↓ launch.json configs ↓ -----",
-						type = "",
-						request = "launch",
 					},
 				}
 			end
@@ -119,7 +106,6 @@ return {
 					require("dap-vscode-js").setup({
 						debugger_path = vim.fn.resolve(vim.fn.stdpath("data") .. "/lazy/vscode-js-debug"),
 						adapters = {
-							"chrome",
 							"pwa-node",
 						},
 					})
@@ -150,4 +136,3 @@ return {
 		end,
 	},
 }
-
