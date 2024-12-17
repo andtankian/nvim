@@ -14,6 +14,7 @@ return {
 				"xiyaowong/telescope-emoji.nvim",
 			},
 			{ "aaronhallaert/advanced-git-search.nvim", cmd = { "AdvancedGitSearch" } },
+			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 		},
 		opts = {
 			pickers = {
@@ -156,6 +157,7 @@ return {
 			}
 
 			telescope.setup(opts)
+      telescope.load_extension("fzf")
 			telescope.load_extension("live_grep_args")
 			telescope.load_extension("emoji")
 			telescope.load_extension("advanced_git_search")
