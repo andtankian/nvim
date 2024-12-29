@@ -157,7 +157,7 @@ return {
 			}
 
 			telescope.setup(opts)
-      telescope.load_extension("fzf")
+			telescope.load_extension("fzf")
 			telescope.load_extension("live_grep_args")
 			telescope.load_extension("emoji")
 			telescope.load_extension("advanced_git_search")
@@ -188,6 +188,7 @@ return {
 				width = {
 					max = 60,
 				},
+				relativenumber = true,
 			},
 			git = {
 				enable = true,
