@@ -4,6 +4,7 @@ local lsps = {
 	"ts_ls",
 	"jsonls",
 	"terraformls",
+	"bashls",
 }
 
 local formatters = {
