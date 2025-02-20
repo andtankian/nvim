@@ -89,10 +89,11 @@ return {
 								role = "user",
 								content = function()
 									return [[Give me the command to create a new PR using gh cli. The body of the PR should be filled up based on the changes in the diff and the provided template. Here more options that should be present in the command:
-      - base: main
-      - label: feature
-      - assignee: @me
-      - title: My PR title]]
+
+- base: main
+- label: feature
+- assignee: @me
+- title: My PR title]]
 								end,
 								opts = {
 									contains_code = true,
