@@ -1,5 +1,3 @@
-local utils = require("utils")
-
 local js_based_languages = {
 	"typescript",
 	"javascript",
@@ -126,14 +124,26 @@ return {
 	{
 		"akinsho/toggleterm.nvim",
 		version = "*",
-		opts = {
-			open_mapping = "<C-t>",
-			direction = "float",
+		opts = {},
+		keys = {
+			{
+				"<C-t>",
+				"<cmd>ToggleTerm 1 direction=float<cr>",
+				desc = "Toggle floating terminal",
+				mode = { "n", "i", "t" },
+			},
+			{
+				"<leader>h",
+				"<cmd>ToggleTerm 2 direction=horizontal<cr>",
+				desc = "Toggle horizontal terminal",
+				mode = { "n", "i", "t" },
+			},
+			{
+				"<C-x>",
+				"<C-\\><C-n>",
+				mode = "t",
+				desc = "Exit terminal mode",
+			},
 		},
-		config = function(_, opts)
-			require("toggleterm").setup(opts)
-
-			utils.map("t", "<C-x>", "<C-\\><C-n>", { desc = "Exit terminal mode", noremap = true })
-		end,
 	},
 }
