@@ -124,19 +124,25 @@ return {
 	{
 		"akinsho/toggleterm.nvim",
 		version = "*",
-		opts = {},
+		opts = {
+			float_opts = {
+				border = "curved",
+				width = 92 * 2,
+			},
+			autscroll = false,
+		},
 		keys = {
 			{
 				"<C-t>",
 				"<cmd>ToggleTerm 1 direction=float<cr>",
 				desc = "Toggle floating terminal",
-				mode = { "n", "i", "t" },
+				mode = { "n", "t" },
 			},
 			{
-				"<leader>h",
+				"<S-T>",
 				"<cmd>ToggleTerm 2 direction=horizontal<cr>",
 				desc = "Toggle horizontal terminal",
-				mode = { "n", "i", "t" },
+				mode = { "n", "t" },
 			},
 			{
 				"<C-x>",
