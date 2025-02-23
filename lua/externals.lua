@@ -1,6 +1,5 @@
 local lsps = {
 	"lua_ls",
-	"eslint",
 	"ts_ls",
 	"jsonls",
 	"terraformls",

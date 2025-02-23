@@ -2,62 +2,43 @@ local externals = require("externals")
 local utils = require("utils")
 
 return {
+	{ "esmuellert/nvim-eslint", opts = {} },
 	{
-		"hrsh7th/cmp-nvim-lsp",
-		name = "cmp-lsp",
-	},
-	{
-		"hrsh7th/nvim-cmp",
-		dependencies = {
-			"cmp-lsp",
-			"hrsh7th/cmp-buffer",
-			"hrsh7th/cmp-path",
-			"L3MON4D3/LuaSnip",
-			"saadparwaiz1/cmp_luasnip",
-		},
-		config = function()
-			local cmp = require("cmp")
-			local luasnip = require("luasnip")
+		"saghen/blink.cmp",
+		dependencies = "rafamadriz/friendly-snippets",
+		version = "*",
+		---@module 'blink.cmp'
+		---@type blink.cmp.Config
+		opts = {
+			cmdline = { enabled = false },
+			signature = { enabled = true },
+			-- 'default' for mappings similar to built-in completion
+			-- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
+			-- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
+			-- See the full "keymap" documentation for information on defining your own keymap.
+			keymap = {
+				preset = "default",
+				["<Tab>"] = { "select_next", "fallback" },
+				["<S-Tab>"] = { "select_prev", "fallback" },
+				["<Cr>"] = { "accept", "fallback" },
+			},
 
-			cmp.setup({
-				snippet = {
-					expand = function(args)
-						luasnip.lsp_expand(args.body)
-					end,
-				},
-				mapping = cmp.mapping.preset.insert({
-					["<C-u>"] = cmp.mapping.scroll_docs(-4),
-					["<C-d>"] = cmp.mapping.scroll_docs(4),
-					["<C-Space>"] = cmp.mapping.complete(),
-					["<CR>"] = cmp.mapping.confirm({
-						behavior = cmp.ConfirmBehavior.Replace,
-						select = true,
-					}),
-					["<Tab>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_next_item()
-						elseif luasnip.expand_or_jumpable() then
-							luasnip.expand_or_jump()
-						else
-							fallback()
-						end
-					end, { "i", "s" }),
-					["<S-Tab>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_prev_item()
-						elseif luasnip.jumpable(-1) then
-							luasnip.jump(-1)
-						else
-							fallback()
-						end
-					end, { "i", "s" }),
-				}),
-				sources = {
-					{ name = "nvim_lsp" },
-					{ name = "buffer" },
-				},
-			})
-		end,
+			appearance = {
+				-- Sets the fallback highlight groups to nvim-cmp's highlight groups
+				-- Useful for when your theme doesn't support blink.cmp
+				-- Will be removed in a future release
+				use_nvim_cmp_as_default = true,
+				-- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+				-- Adjusts spacing to ensure icons are aligned
+			},
+
+			-- Default list of enabled providers defined so that you can extend it
+			-- elsewhere in your config, without redefining it, due to `opts_extend`
+			sources = {
+				default = { "lsp", "path", "snippets", "buffer" },
+			},
+		},
+		opts_extend = { "sources.default" },
 	},
 	{
 		"williamboman/mason.nvim",
@@ -85,11 +66,7 @@ return {
 	},
 	{
 		"neovim/nvim-lspconfig",
-		dependencies = {
-			"mason-lspconfig",
-			"cmp-lsp",
-			"conform",
-		},
+		dependencies = { "saghen/blink.cmp" },
 		keys = {
 			{ "<leader>lr", ":LspRestart<CR>", desc = "Restart LSP", { silent = true, noremap = true } },
 			{ "<leader>f", vim.diagnostic.open_float, desc = "Open float with current diagnostic error" },
@@ -99,7 +76,7 @@ return {
 		config = function()
 			local lspconfig = require("lspconfig")
 
-			local capabilities = require("cmp_nvim_lsp").default_capabilities()
+			local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 			capabilities.textDocument.foldingRange = {
 				dynamicRegistration = false,
@@ -135,14 +112,6 @@ return {
 				end
 			end
 
-			lspconfig.eslint.setup({
-				capabilities = capabilities,
-				settings = {
-					workingDirectory = { mode = "location" },
-				},
-				root_dir = lspconfig.util.find_git_ancestor,
-			})
-
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 				callback = function(ev)
@@ -153,6 +122,7 @@ return {
 					utils.map("n", "<leader>rn", vim.lsp.buf.rename, opts)
 					utils.map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
 					utils.map("n", "gr", vim.lsp.buf.references, opts)
+					-- utils.map("n", "gi", vim.lsp.buf.implementation, opts)
 					utils.map("n", "<leader>fm", function()
 						require("conform").format({ async = true, lsp_fallback = true })
 					end, opts)
@@ -185,9 +155,6 @@ return {
 		opts = {
 			formatters_by_ft = {
 				lua = { "stylua" },
-				javascript = { "prettier" },
-				typescript = { "prettier" },
-				typescriptreact = { "prettier" },
 				json = { "prettier" },
 				yaml = { "yamlfmt" },
 				terraform = { "terraform_fmt" },
