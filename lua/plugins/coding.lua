@@ -2,7 +2,11 @@ local externals = require("externals")
 local utils = require("utils")
 
 return {
-	{ "esmuellert/nvim-eslint", opts = {} },
+	{ "esmuellert/nvim-eslint", opts = {
+		settings = {
+			format = false,
+		},
+	} },
 	{
 		"saghen/blink.cmp",
 		dependencies = "rafamadriz/friendly-snippets",
@@ -156,6 +160,9 @@ return {
 			formatters_by_ft = {
 				lua = { "stylua" },
 				json = { "prettier" },
+				javascript = { "prettier" },
+				typescript = { "prettier" },
+				typescriptreact = { "prettier" },
 				yaml = { "yamlfmt" },
 				terraform = { "terraform_fmt" },
 			},
