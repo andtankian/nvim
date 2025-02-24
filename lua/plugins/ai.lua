@@ -51,7 +51,6 @@ return {
 					opts = {
 						index = 10,
 						is_default = true,
-						is_slash_cmd = true,
 						short_name = "commit-and-pr",
 						auto_submit = false,
 					},
@@ -68,13 +67,24 @@ return {
 							{
 								role = "user",
 								content = function()
-									return string.format(
-										[[You are an expert at following the Conventional Commit specification. Given the git diff listed below, please generate a commit message for me. It's important to generate a concise header commit message only, without any detailed description and without any specific scope:
+									vim.g.codecompanion_auto_tool_mode = true
 
-      ```diff
-      %s
-      ```
-      ]],
+									return string.format(
+										[[@cmd_runner
+
+You are an expert at following the Conventional Commit specification. I'll provide a diff below and you will:
+
+- add everything to the stage
+- create a branch for the commit
+- create a commit
+
+It's important to generate only a concise header commit message, without any detailed description and without any specific scope.
+
+Here is the diff:
+
+```diff
+%s
+```]],
 										vim.fn.system("git diff --no-ext-diff --staged")
 									)
 								end,
@@ -88,6 +98,7 @@ return {
 							{
 								role = "user",
 								content = function()
+									vim.g.codecompanion_auto_tool_mode = false
 									return [[Give me the command to create a new PR using gh cli. The body of the PR should be filled up based on the changes in the diff and the provided template. Here more options that should be present in the command:
 
 - base: main
