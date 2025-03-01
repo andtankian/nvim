@@ -5,6 +5,7 @@ return {
 		config = function()
 			local configs = require("nvim-treesitter.configs")
 
+			---@diagnostic disable-next-line: missing-fields
 			configs.setup({
 				auto_install = true,
 				sync_install = true,
@@ -42,26 +43,6 @@ return {
 		opts = {},
 		lazy = false,
 	},
-	{
-		"kylechui/nvim-surround",
-		version = "*",
-		event = "VeryLazy",
-		opts = {},
-	},
-	{
-		"HiPhish/rainbow-delimiters.nvim",
-		config = function()
-			require("rainbow-delimiters.setup").setup()
-		end,
-	},
-	{
-		"MeanderingProgrammer/render-markdown.nvim",
-		ft = { "markdown", "codecompanion" },
-		opts = {
-			render_modes = true,
-			sign = {
-				enabled = false,
-			},
-		},
-	},
+	{ "echasnovski/mini.ai", version = "*", opts = {} },
+	{ "echasnovski/mini.surround", version = "*", opts = {} },
 }

@@ -118,7 +118,7 @@ return {
 			"nvim-lua/plenary.nvim",
 		},
 		opts = {
-			terminal_position = "buffer",
+			terminal_position = "vertical",
 		},
 	},
 	{

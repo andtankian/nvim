@@ -21,6 +21,26 @@ return {
 			{ "stevearc/dressing.nvim", opts = {} },
 		},
 		opts = {
+			adapters = {
+				reasoning = function()
+					return require("codecompanion.adapters").extend("anthropic", {
+						schema = {
+							model = {
+								default = "claude-3-7-sonnet-20250219",
+							},
+						},
+					})
+				end,
+				anthropic = function()
+					return require("codecompanion.adapters").extend("anthropic", {
+						schema = {
+							model = {
+								default = "claude-3-5-sonnet-20241022",
+							},
+						},
+					})
+				end,
+			},
 			display = {
 				chat = {
 					show_header_separator = false,
@@ -45,9 +65,61 @@ return {
 				},
 			},
 			prompt_library = {
-				["Generate a Commit Message And PR it"] = {
+				["Commit concise"] = {
+					strategy = "chat",
+					description = "Generate a conventional commit message without long description.",
+					opts = {
+						index = 11,
+						is_default = true,
+						short_name = "commit-concise",
+						auto_submit = true,
+					},
+					references = {
+						{
+							type = "file",
+							path = {
+								".vscode/settings.json",
+							},
+						},
+					},
+					prompts = {
+						{
+							role = "user",
+							content = function()
+								vim.g.codecompanion_auto_tool_mode = true
+
+								return string.format(
+									[[@cmd_runner
+
+You are an expert in following the Conventional Commit specification. Based on the provided diff, perform the following steps: 
+1. Commit the changes using a concise commit message that follows the Conventional Commit format. 
+  - Use only a header (no detailed description).
+  - Use the provided scope settings file to base your self what scope to use.
+  - Ensure the message is clear, relevant, and properly formatted.
+
+Important Notes:
+- Do not run git add, as all provided diffs are already staged.
+
+Execute these steps precisely.
+
+Here is the diff:
+
+```diff
+%s
+```]],
+									vim.fn.system("git diff --no-ext-diff --staged")
+								)
+							end,
+							opts = {
+								contains_code = true,
+								auto_submit = true,
+							},
+						},
+					},
+				},
+				["Commit and PR"] = {
 					strategy = "workflow",
-					description = "Generate a commit message and submit a PR",
+					description = "Generate a commit, push the branch and create a PR.",
 					opts = {
 						index = 10,
 						is_default = true,
@@ -72,13 +144,18 @@ return {
 									return string.format(
 										[[@cmd_runner
 
-You are an expert at following the Conventional Commit specification. I'll provide a diff below and you will:
+You are an expert in following the Conventional Commit specification. Based on the provided diff, perform the following steps: 
+1. Create a new branch for the commit.
+2. Commit the changes using a concise commit message that follows the Conventional Commit format. 
+  - Use only a header (no detailed description or specific scope).
+  - Ensure the message is clear, relevant, and properly formatted.
+3. Push the branch to the remote repository with –set-upstream origin.
 
-- add everything to the stage
-- create a branch for the commit
-- create a commit
+Important Notes:
+- Do not run git add, as all provided diffs are already staged.
+- Go directly to committing and pushing without modifying the staged files.
 
-It's important to generate only a concise header commit message, without any detailed description and without any specific scope.
+Execute these steps precisely.
 
 Here is the diff:
 
@@ -98,16 +175,17 @@ Here is the diff:
 							{
 								role = "user",
 								content = function()
-									vim.g.codecompanion_auto_tool_mode = false
-									return [[Give me the command to create a new PR using gh cli. The body of the PR should be filled up based on the changes in the diff and the provided template. Here more options that should be present in the command:
+									return [[You are an expert in creating pull requests using the GitHub CLI. Based on the provided diff and template, generate a new PR with the following specifications:
+- Use the provided diff to fill out the PR body according to the given template.
+- Set the base branch to main.
+- Assign an appropriate label from refactoring, feature, fix, or chore, based on the changes.
+- Set the assignee to @me.
+- Generate a clear, first word capitalized title based on the commit message, but do not use the Conventional Commit format—use a plain descriptive title instead.
 
-- base: main
-- label: feature
-- assignee: @me
-- title: My PR title]]
+Execute these steps precisely and efficiently.]]
 								end,
 								opts = {
-									contains_code = true,
+									contains_code = false,
 									auto_submit = false,
 								},
 							},
