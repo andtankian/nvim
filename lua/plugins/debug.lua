@@ -129,7 +129,7 @@ return {
 				border = "curved",
 				width = 92 * 2,
 			},
-			autscroll = false,
+			autoscroll = false,
 		},
 		keys = {
 			{
@@ -139,7 +139,7 @@ return {
 				mode = { "n", "t" },
 			},
 			{
-				"<S-T>",
+				"<C-S-i>",
 				"<cmd>ToggleTerm 2 direction=horizontal<cr>",
 				desc = "Toggle horizontal terminal",
 				mode = { "n", "t" },
