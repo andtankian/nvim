@@ -22,6 +22,11 @@ return {
 				["<S-Tab>"] = { "select_prev", "fallback" },
 				["<Cr>"] = { "accept", "fallback" },
 			},
+			completion = {
+				documentation = {
+					auto_show = true,
+				},
+			},
 			appearance = {
 				use_nvim_cmp_as_default = true,
 			},
