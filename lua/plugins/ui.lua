@@ -13,10 +13,6 @@ return {
 		end,
 	},
 	{
-		"uga-rosa/ccc.nvim",
-		opts = {},
-	},
-	{
 		"kevinhwang91/nvim-ufo",
 		dependencies = { "kevinhwang91/promise-async" },
 		name = "ufo",

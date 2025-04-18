@@ -2,11 +2,16 @@ local externals = require("externals")
 local utils = require("utils")
 
 return {
-	{ "esmuellert/nvim-eslint", opts = {
-		settings = {
-			format = false,
+	{
+		"esmuellert/nvim-eslint",
+		opts = {
+			settings = {
+				format = false,
+				useFlatConfig = true,
+				experimental = { useFlatConfig = false },
+			},
 		},
-	} },
+	},
 	{
 		"saghen/blink.cmp",
 		dependencies = "rafamadriz/friendly-snippets",
