@@ -19,6 +19,9 @@ return {
 		---@module 'blink.cmp'
 		---@type blink.cmp.Config
 		opts = {
+			enabled = function()
+				return not vim.tbl_contains({ "CodeCompanion", "DressinInput" }, vim.bo.filetype)
+			end,
 			cmdline = { enabled = false },
 			signature = { enabled = false },
 			keymap = {
