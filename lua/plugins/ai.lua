@@ -24,10 +24,6 @@ return {
 					codecompanion = {
 						-- Show the mcp tool result in the chat buffer
 						show_result_in_chat = true,
-						-- Make chat #variables from MCP server resources
-						make_vars = true,
-						-- Create slash commands for prompts
-						make_slash_commands = true,
 					},
 				},
 			})
@@ -44,20 +40,11 @@ return {
 		},
 		opts = {
 			adapters = {
-				reasoning = function()
-					return require("codecompanion.adapters").extend("anthropic", {
+				deepseek = function()
+					return require("codecompanion.adapters").extend("deepseek", {
 						schema = {
 							model = {
-								default = "claude-3-7-sonnet-20250219",
-							},
-						},
-					})
-				end,
-				anthropic = function()
-					return require("codecompanion.adapters").extend("anthropic", {
-						schema = {
-							model = {
-								default = "claude-3-5-sonnet-20241022",
+								default = "deepseek-chat",
 							},
 						},
 					})
@@ -70,7 +57,7 @@ return {
 			},
 			strategies = {
 				chat = {
-					adapter = "anthropic",
+					adapter = "deepseek",
 					slash_commands = {
 						["buffer"] = {
 							opts = {
@@ -89,10 +76,10 @@ return {
 					},
 				},
 				inline = {
-					adapter = "anthropic",
+					adapter = "deepseek",
 				},
 				agent = {
-					adapter = "anthropic",
+					adapter = "deepseek",
 				},
 			},
 			prompt_library = {

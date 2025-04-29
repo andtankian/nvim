@@ -20,7 +20,7 @@ return {
 		---@type blink.cmp.Config
 		opts = {
 			enabled = function()
-				return not vim.tbl_contains({ "CodeCompanion", "DressinInput" }, vim.bo.filetype)
+				return not vim.tbl_contains({ "DressingInput" }, vim.bo.filetype)
 			end,
 			cmdline = { enabled = false },
 			signature = { enabled = false },
