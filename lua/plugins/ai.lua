@@ -46,17 +46,6 @@ return {
 			{ "stevearc/dressing.nvim", opts = {} },
 		},
 		opts = {
-			adapters = {
-				deepseek = function()
-					return require("codecompanion.adapters").extend("deepseek", {
-						schema = {
-							model = {
-								default = "deepseek-chat",
-							},
-						},
-					})
-				end,
-			},
 			display = {
 				chat = {
 					show_header_separator = false,
@@ -64,7 +53,7 @@ return {
 			},
 			strategies = {
 				chat = {
-					adapter = "deepseek",
+					adapter = "copilot",
 					slash_commands = {
 						["buffer"] = {
 							opts = {
@@ -83,10 +72,10 @@ return {
 					},
 				},
 				inline = {
-					adapter = "deepseek",
+					adapter = "copilot",
 				},
 				agent = {
-					adapter = "deepseek",
+					adapter = "copilot",
 				},
 			},
 			prompt_library = {
