@@ -2,14 +2,19 @@ local utils = require("utils")
 
 return {
 	{
-		"supermaven-inc/supermaven-nvim",
-		opts = {
-			keymaps = {
-				accept_suggestion = "<C-j>",
-				clear_suggestion = "<C-]>",
-				accept_word = "<C-k>",
-			},
-		},
+		"github/copilot.vim", -- Copilot
+		config = function()
+			local g = vim.g
+			g.copilot_no_tab_map = true
+
+			-- Change keymapping of <tab> to <C-j> to avoid conflict with nvim comp
+			utils.map(
+				"i",
+				"<C-j>",
+				'copilot#Accept("<cr>")',
+				{ noremap = true, silent = true, expr = true, replace_keycodes = false, desc = "Accept copilot suggestion" }
+			)
+		end,
 	},
 	{
 		"ravitemer/mcphub.nvim",
