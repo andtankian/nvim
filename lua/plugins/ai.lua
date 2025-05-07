@@ -2,15 +2,18 @@ local utils = require("utils")
 
 return {
 	{
-		"supermaven-inc/supermaven-nvim",
-		opts = {
-			keymaps = {
-				accept_suggestion = "<C-j>",
-				clear_suggestion = "<C-]>",
-				accept_word = "<C-k>",
-			},
-		},
-	},
+    "github/copilot.vim",
+ 		config = function()
+ 			local g = vim.g
+ 			g.copilot_no_tab_map = true
+ 			utils.map(
+ 				"i",
+ 				"<C-j>",
+ 				'copilot#Accept("<cr>")',
+ 				{ noremap = true, silent = true, expr = true, replace_keycodes = false, desc = "Accept copilot suggestion" }
+ 			)
+ 		end
+  },
 	{
 		"ravitemer/mcphub.nvim",
 		dependencies = {
@@ -24,6 +27,10 @@ return {
 					codecompanion = {
 						-- Show the mcp tool result in the chat buffer
 						show_result_in_chat = true,
+						-- Make chat #variables from MCP server resources
+						make_vars = true,
+						-- Create slash commands for prompts
+						make_slash_commands = true,
 					},
 				},
 			})
