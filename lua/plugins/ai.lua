@@ -2,18 +2,18 @@ local utils = require("utils")
 
 return {
 	{
-    "github/copilot.vim",
- 		config = function()
- 			local g = vim.g
- 			g.copilot_no_tab_map = true
- 			utils.map(
- 				"i",
- 				"<C-j>",
- 				'copilot#Accept("<cr>")',
- 				{ noremap = true, silent = true, expr = true, replace_keycodes = false, desc = "Accept copilot suggestion" }
- 			)
- 		end
-  },
+		"github/copilot.vim",
+		config = function()
+			local g = vim.g
+			g.copilot_no_tab_map = true
+			utils.map(
+				"i",
+				"<C-j>",
+				'copilot#Accept("<cr>")',
+				{ noremap = true, silent = true, expr = true, replace_keycodes = false, desc = "Accept copilot suggestion" }
+			)
+		end,
+	},
 	{
 		"ravitemer/mcphub.nvim",
 		dependencies = {
@@ -21,20 +21,7 @@ return {
 		},
 		cmd = "MCPHub",
 		build = "npm install -g mcp-hub@latest",
-		config = function()
-			require("mcphub").setup({
-				extensions = {
-					codecompanion = {
-						-- Show the mcp tool result in the chat buffer
-						show_result_in_chat = true,
-						-- Make chat #variables from MCP server resources
-						make_vars = true,
-						-- Create slash commands for prompts
-						make_slash_commands = true,
-					},
-				},
-			})
-		end,
+		opts = {},
 	},
 	{
 		"olimorris/codecompanion.nvim",
@@ -46,6 +33,16 @@ return {
 			{ "stevearc/dressing.nvim", opts = {} },
 		},
 		opts = {
+			extensions = {
+				mcphub = {
+					callback = "mcphub.extensions.codecompanion",
+					opts = {
+						show_result_in_chat = true,
+						make_vars = true,
+						make_slash_commands = true,
+					},
+				},
+			},
 			display = {
 				chat = {
 					show_header_separator = false,
