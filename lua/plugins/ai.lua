@@ -42,6 +42,9 @@ return {
 						make_slash_commands = true,
 					},
 				},
+				vectorcode = {
+					opts = { add_tool = true, add_slash_command = true, tool_opts = {} },
+				},
 			},
 			display = {
 				chat = {
@@ -56,15 +59,6 @@ return {
 							opts = {
 								provider = "telescope",
 							},
-						},
-					},
-					tools = {
-						["mcp"] = {
-							-- Prevent mcphub from loading before needed
-							callback = function()
-								return require("mcphub.extensions.codecompanion")
-							end,
-							description = "Call tools and resources from the MCP Servers",
 						},
 					},
 				},
@@ -100,18 +94,11 @@ return {
 								vim.g.codecompanion_auto_tool_mode = true
 
 								return string.format(
-									[[@cmd_runner
-
-You are an expert in following the Conventional Commit specification. Based on the provided diff, perform the following steps: 
-1. Commit the changes using a concise commit message that follows the Conventional Commit format. 
-  - Use only a header (no detailed description).
-  - Use the provided scope settings file to base your self what scope to use.
-  - Ensure the message is clear, relevant, and properly formatted.
-
-Important Notes:
-- Do not run git add, as all provided diffs are already staged.
-
-Execute these steps precisely.
+									[[I want you to use the @cmd_runner tool to create a commit using a concise commit message that follows the conventional commit format. Make sure to:
+1. Use only a header (no detailed description).
+2. Choose the correct scope based on the changes.
+3. Ensure the message is clear, relevant, and properly formatted.
+4. DO NOT run git add, as all the changes is provided and already staged.
 
 Here is the diff:
 
@@ -123,7 +110,7 @@ Here is the diff:
 							end,
 							opts = {
 								contains_code = true,
-								auto_submit = false,
+								auto_submit = true,
 							},
 						},
 					},
@@ -142,31 +129,30 @@ Here is the diff:
 							type = "file",
 							path = {
 								".github/pull_request_template.md",
+								".vscode/settings.json",
 							},
 						},
 					},
 					prompts = {
 						{
 							{
+								role = "system",
+								content = [[You are an expert creating commits using the conventional commit format. You know exactly how to generate a commit message based on any provided diff. You're also an expert in creating pull requests using the GitHub CLI.]],
+								opts = {
+									visible = false,
+								},
+							},
+							{
 								role = "user",
 								content = function()
 									vim.g.codecompanion_auto_tool_mode = true
 
 									return string.format(
-										[[@cmd_runner
-
-You are an expert in following the Conventional Commit specification. Based on the provided diff, perform the following steps: 
-1. Create a new branch for the commit.
-2. Commit the changes using a concise commit message that follows the Conventional Commit format. 
-  - Use only a header (no detailed description or specific scope).
-  - Ensure the message is clear, relevant, and properly formatted.
-3. Push the branch to the remote repository with –set-upstream origin.
-
-Important Notes:
-- Do not run git add, as all provided diffs are already staged.
-- Go directly to committing and pushing without modifying the staged files.
-
-Execute these steps precisely.
+										[[I want you to use the @cmd_runner tool to create a commit using the conventional commit format. Make sure to:
+1. Use the provided diff to generate a commit message.
+2. Choose the correct scope based on the changes.
+3. Ensure the message is clear, relevant, and properly formatted.
+4. DO NOT run git add, as all the changes is provided and already staged.
 
 Here is the diff:
 
@@ -185,16 +171,34 @@ Here is the diff:
 						{
 							{
 								role = "user",
-								content = function()
-									return [[You are an expert in creating pull requests using the GitHub CLI. Based on the provided diff and template, generate a new PR with the following specifications:
+								content = "I want you to use the @cmd_runner tool again, but this time you will checkout to a new branch with a relevant name based on the commit message.",
+								opts = {
+									contains_code = false,
+									auto_submit = true,
+								},
+							},
+						},
+						{
+							{
+								role = "user",
+								content = "I want you to use the @cmd_runner tool again, but this time you will push the new created and switched branch to the remote repository using the --set-upstream flag.",
+								opts = {
+									contains_code = false,
+									auto_submit = true,
+								},
+							},
+						},
+						{
+							{
+								role = "user",
+								content = [[I want you to use the @cmd_runner tool to create a pull request using GitHub CLI, generate a new PR with the following specifications:
 - Use the provided diff to fill out the PR body according to the given template.
 - Set the base branch to main.
 - Assign an appropriate label from refactoring, feature, fix, or chore, based on the changes.
 - Set the assignee to @me.
 - Generate a clear, first word capitalized title based on the commit message, but do not use the Conventional Commit format—use a plain descriptive title instead.
 
-Execute these steps precisely and efficiently.]]
-								end,
+Execute these steps precisely and efficiently.]],
 								opts = {
 									contains_code = false,
 									auto_submit = false,
@@ -212,5 +216,11 @@ Execute these steps precisely and efficiently.]]
 			utils.map("v", "<leader>cc", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
 			vim.api.nvim_create_user_command("Cc", "CodeCompanion <args>", { nargs = "*" })
 		end,
+	},
+	{
+		"Davidyz/VectorCode",
+		version = "*",
+		build = "pipx upgrade vectorcode", -- recommended if you set `version = "*"` or follow the main branch
+		dependencies = { "nvim-lua/plenary.nvim" },
 	},
 }
