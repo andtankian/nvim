@@ -150,7 +150,7 @@ Here is the diff:
 									return string.format(
 										[[I want you to use the @cmd_runner tool to create a commit using the conventional commit format. Make sure to:
 1. Use the provided diff to generate a commit message.
-2. Choose the correct scope based on the changes.
+2. Write only the header (no detailed description and no scope).
 3. Ensure the message is clear, relevant, and properly formatted.
 4. DO NOT run git add, as all the changes is provided and already staged.
 
@@ -191,8 +191,9 @@ Here is the diff:
 						{
 							{
 								role = "user",
-								content = [[I want you to use the @cmd_runner tool to create a pull request using GitHub CLI, generate a new PR with the following specifications:
+								content = [[I want you to SKIP @cmd_runner tool this time to create a pull request using GitHub CLI, generate a new PR with the following specifications:
 - Use the provided diff to fill out the PR body according to the given template.
+- Scape correctly the crasis symbol (```) in the body.
 - Set the base branch to main.
 - Assign an appropriate label from refactoring, feature, fix, or chore, based on the changes.
 - Set the assignee to @me.
@@ -200,7 +201,21 @@ Here is the diff:
 
 Execute these steps precisely and efficiently.]],
 								opts = {
-									contains_code = false,
+									contains_code = true,
+									auto_submit = false,
+								},
+							},
+						},
+						{
+							{
+								role = "user",
+								content = [[Now, finally, I want you use @cmd_runner tool this time to create a pull request using GitHub CLI based on the following command:
+
+                ```bash
+
+                ```]],
+								opts = {
+									contains_code = true,
 									auto_submit = false,
 								},
 							},
