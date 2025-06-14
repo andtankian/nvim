@@ -33,6 +33,17 @@ return {
 			{ "stevearc/dressing.nvim", opts = {} },
 		},
 		opts = {
+			adapters = {
+				copilot = function()
+					return require("codecompanion.adapters").extend("copilot", {
+						schema = {
+							model = {
+								default = "claude-sonnet-4",
+							},
+						},
+					})
+				end,
+			},
 			extensions = {
 				mcphub = {
 					callback = "mcphub.extensions.codecompanion",
@@ -164,7 +175,7 @@ Here is the diff:
 								end,
 								opts = {
 									contains_code = true,
-									auto_submit = true,
+									auto_submit = false,
 								},
 							},
 						},
@@ -174,7 +185,7 @@ Here is the diff:
 								content = "I want you to use the @cmd_runner tool again, but this time you will checkout to a new branch with a relevant name based on the commit message.",
 								opts = {
 									contains_code = false,
-									auto_submit = true,
+									auto_submit = false,
 								},
 							},
 						},
@@ -184,22 +195,20 @@ Here is the diff:
 								content = "I want you to use the @cmd_runner tool again, but this time you will push the new created and switched branch to the remote repository using the --set-upstream flag.",
 								opts = {
 									contains_code = false,
-									auto_submit = true,
+									auto_submit = false,
 								},
 							},
 						},
 						{
 							{
 								role = "user",
-								content = [[I want you to SKIP @cmd_runner tool this time to create a pull request using GitHub CLI, generate a new PR with the following specifications:
+								content = [[I want you to NOT run any command in this request, just output it for me. Create a pull request using GitHub CLI, generate a new PR with the following specifications:
 - Use the provided diff to fill out the PR body according to the given template.
 - Scape correctly the crasis symbol (```) in the body.
 - Set the base branch to main.
 - Assign an appropriate label from refactoring, feature, fix, or chore, based on the changes.
 - Set the assignee to @me.
-- Generate a clear, first word capitalized title based on the commit message, but do not use the Conventional Commit format—use a plain descriptive title instead.
-
-Execute these steps precisely and efficiently.]],
+- Generate a clear, first word capitalized title based on the commit message, but do not use the Conventional Commit format—use a plain descriptive title instead.]],
 								opts = {
 									contains_code = true,
 									auto_submit = false,

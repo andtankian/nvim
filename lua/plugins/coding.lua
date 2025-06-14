@@ -45,18 +45,20 @@ return {
 		opts_extend = { "sources.default" },
 	},
 	{
-		"williamboman/mason.nvim",
+		"mason-org/mason.nvim",
 		name = "mason",
 		opts = {},
 	},
 	{
-		"williamboman/mason-lspconfig.nvim",
+		"mason-org/mason-lspconfig.nvim",
 		name = "mason-lspconfig",
 		dependencies = {
 			"mason",
+			"neovim/nvim-lspconfig",
 		},
 		opts = {
 			ensure_installed = externals.lsps,
+			automatic_enable = false,
 		},
 	},
 	{
@@ -74,8 +76,20 @@ return {
 		keys = {
 			{ "<leader>lr", ":LspRestart<CR>", desc = "Restart LSP", { silent = true, noremap = true } },
 			{ "<leader>f", vim.diagnostic.open_float, desc = "Open float with current diagnostic error" },
-			{ "[d", vim.diagnostic.goto_prev, desc = "Go to previous diagnostic error" },
-			{ "]d", vim.diagnostic.goto_next, desc = "Go to next diagnostic error" },
+			{
+				"[d",
+				function()
+					vim.diagnostic.jump({ count = -1, float = true })
+				end,
+				desc = "Go to previous diagnostic error",
+			},
+			{
+				"]d",
+				function()
+					vim.diagnostic.jump({ count = 1, float = true })
+				end,
+				desc = "Go to next diagnostic error",
+			},
 		},
 		config = function()
 			local lspconfig = require("lspconfig")
