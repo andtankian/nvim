@@ -71,6 +71,19 @@ return {
 								provider = "telescope",
 							},
 						},
+						["sequentialthinking"] = {
+							description = "Think step by step and provide a detailed final solution.",
+							---@param chat CodeCompanion.Chat
+							callback = function(chat)
+								chat:add_buf_message({
+									content = [[
+                To accomplish this, you use @mcp tool to sequentially think step by step and provide a detailed final solution. This tool usually uses camelCase on its parameter, make sure you call it correctly. At the end, you will provide a final solution without applying in the code, just show me what you get.]],
+								})
+							end,
+							opts = {
+								contains_code = false,
+							},
+						},
 					},
 				},
 				inline = {
@@ -130,10 +143,7 @@ Here is the diff:
 					strategy = "workflow",
 					description = "Generate a commit, push the branch and create a PR.",
 					opts = {
-						index = 10,
-						is_default = true,
 						short_name = "commit-and-pr",
-						auto_submit = false,
 					},
 					references = {
 						{
@@ -175,56 +185,44 @@ Here is the diff:
 								end,
 								opts = {
 									contains_code = true,
-									auto_submit = false,
+									auto_submit = true,
 								},
 							},
 						},
 						{
 							{
 								role = "user",
-								content = "I want you to use the @cmd_runner tool again, but this time you will checkout to a new branch with a relevant name based on the commit message.",
+								content = "Checkout to a new branch with a relevant name based on the commit message.",
 								opts = {
 									contains_code = false,
-									auto_submit = false,
+									auto_submit = true,
 								},
 							},
 						},
 						{
 							{
 								role = "user",
-								content = "I want you to use the @cmd_runner tool again, but this time you will push the new created and switched branch to the remote repository using the --set-upstream flag.",
+								content = "Push the new created and switched branch to the remote repository using the --set-upstream flag.",
 								opts = {
 									contains_code = false,
-									auto_submit = false,
+									auto_submit = true,
 								},
 							},
 						},
 						{
 							{
 								role = "user",
-								content = [[I want you to NOT run any command in this request, just output it for me. Create a pull request using GitHub CLI, generate a new PR with the following specifications:
+								content = [[Create a pull request using GitHub CLI:
 - Use the provided diff to fill out the PR body according to the given template.
 - Scape correctly the crasis symbol (```) in the body.
 - Set the base branch to main.
 - Assign an appropriate label from refactoring, feature, fix, or chore, based on the changes.
 - Set the assignee to @me.
-- Generate a clear, first word capitalized title based on the commit message, but do not use the Conventional Commit format—use a plain descriptive title instead.]],
-								opts = {
-									contains_code = true,
-									auto_submit = false,
-								},
-							},
-						},
-						{
-							{
-								role = "user",
-								content = [[Now, finally, I want you use @cmd_runner tool this time to create a pull request using GitHub CLI based on the following command:
+- Generate a clear, first word capitalized title based on the commit message, but do not use the Conventional Commit format—use a plain descriptive title instead.
 
-                ```bash
-
-                ```]],
+Execute these steps precisely and efficiently.]],
 								opts = {
-									contains_code = true,
+									contains_code = false,
 									auto_submit = false,
 								},
 							},
