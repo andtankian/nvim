@@ -179,6 +179,7 @@ return {
 				typescriptreact = { "prettier" },
 				yaml = { "yamlfmt" },
 				terraform = { "terraform_fmt" },
+				python = { "black" },
 			},
 		},
 	},

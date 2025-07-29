@@ -38,7 +38,16 @@ return {
 					return require("codecompanion.adapters").extend("copilot", {
 						schema = {
 							model = {
-								default = "gpt-4.1",
+								default = "claude-sonnet-4",
+							},
+						},
+					})
+				end,
+				anthropic = function()
+					return require("codecompanion.adapters").extend("anthropic", {
+						schema = {
+							model = {
+								default = "claude-3-5-sonnet-latest",
 							},
 						},
 					})
@@ -64,7 +73,7 @@ return {
 			},
 			strategies = {
 				chat = {
-					adapter = "copilot",
+					adapter = "anthropic",
 					slash_commands = {
 						["buffer"] = {
 							opts = {
@@ -76,13 +85,18 @@ return {
 							---@param chat CodeCompanion.Chat
 							callback = function(chat)
 								chat:add_buf_message({
-									content = [[
-                To accomplish this, you use @mcp tool to sequentially think step by step and provide a detailed final solution. This tool usually uses camelCase on its parameter, make sure you call it correctly. At the end, you will provide a final solution without applying in the code, just show me what you get.]],
+									content = [[To accomplish this, you use @{mcp} tool called sequential-thinkin to think step by step and provide a detailed final solution. This tool usually uses camelCase on its parameter, make sure you call it correctly. At the end, you will provide a final solution without applying in the code, just show me what you get.]],
 								})
 							end,
 							opts = {
 								contains_code = false,
 							},
+						},
+					},
+					tools = {
+						opts = {
+							auto_submit_errors = true,
+							auto_submit_success = true,
 						},
 					},
 				},
@@ -118,7 +132,7 @@ return {
 								vim.g.codecompanion_auto_tool_mode = true
 
 								return string.format(
-									[[I want you to use the @cmd_runner tool to create a commit using a concise commit message that follows the conventional commit format. Make sure to:
+									[[I want you to use the @{cmd_runner} tool to create a commit using a concise commit message that follows the conventional commit format. Make sure to:
 1. Use only a header (no detailed description).
 2. Choose the correct scope based on the changes.
 3. Ensure the message is clear, relevant, and properly formatted.
@@ -144,6 +158,7 @@ Here is the diff:
 					description = "Generate a commit, push the branch and create a PR.",
 					opts = {
 						short_name = "commit-and-pr",
+						adapter = "anthropic",
 					},
 					references = {
 						{
@@ -169,7 +184,7 @@ Here is the diff:
 									vim.g.codecompanion_auto_tool_mode = true
 
 									return string.format(
-										[[I want you to use the @cmd_runner tool to create a commit using the conventional commit format. Make sure to:
+										[[I want you to use the @{cmd_runner} tool to create a commit using the conventional commit format. Make sure to:
 1. Use the provided diff to generate a commit message.
 2. Write only the header (no detailed description and no scope).
 3. Ensure the message is clear, relevant, and properly formatted.

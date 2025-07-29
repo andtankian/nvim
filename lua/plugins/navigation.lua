@@ -101,6 +101,7 @@ return {
 			{ "<leader>fo", require("telescope.builtin").oldfiles, desc = "Old files" },
 			{ "<leader>fe", ":Telescope emoji<cr>", desc = "Emoji" },
 			{ "<leader>th", ":Telescope themes<cr>", desc = "Nvchad Themes" },
+			{ "<leader>ft", require("telescope.builtin").treesitter, desc = "Treesitter symbols" },
 		},
 		config = function(_, opts)
 			local telescope = require("telescope")

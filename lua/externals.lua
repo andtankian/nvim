@@ -5,12 +5,14 @@ local lsps = {
 	"terraformls",
 	"bashls",
 	"graphql",
+	"pylsp",
 }
 
 local formatters = {
 	"prettier",
 	"stylua",
 	"yamlfmt",
+	"black",
 }
 
 local linters = {
