@@ -1,5 +1,7 @@
 local externals = require("config.externals")
-local helpers = require("config.utils.helpers")
+
+local ensure_installed =
+	vim.iter({ externals.formatters, externals.linters, vim.tbl_values(externals.lsp) }):flatten():totable()
 
 return {
 	{
@@ -9,11 +11,7 @@ return {
 	{
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
 		opts = {
-			ensure_installed = vim.tbl_flatten({
-				externals.formatters,
-				externals.linters,
-				helpers.tbl_values(externals.lsp),
-			}),
+			ensure_installed = ensure_installed,
 		},
 		dependencies = {
 			"mason-org/mason.nvim",

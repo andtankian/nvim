@@ -35,19 +35,10 @@ local function keymap(mode, key, action, opts)
 	vim.keymap.set(mode, key, action, opts)
 end
 
-local function tbl_values(t)
-	local values = {}
-	for _, v in pairs(t) do
-		table.insert(values, v)
-	end
-	return values
-end
-
 return {
 	get_background_color = get_background_color,
 	blend_colors = blend_colors,
 	hex_to_rgb = hex_to_rgb,
 	rgb_to_hex = rgb_to_hex,
 	keymap = keymap,
-	tbl_values = tbl_values,
 }

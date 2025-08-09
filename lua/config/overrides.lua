@@ -41,6 +41,24 @@ local function override_signs()
 		linehl = "",
 		numhl = "",
 	})
+
+	vim.diagnostic.config({
+		signs = {
+			active = true,
+			text = {
+				[vim.diagnostic.severity.ERROR] = "",
+				[vim.diagnostic.severity.WARN] = "",
+				[vim.diagnostic.severity.INFO] = "H",
+				[vim.diagnostic.severity.HINT] = "",
+			},
+		},
+		underline = true,
+		update_in_insert = false,
+		severity_sort = true,
+		float = {
+			border = "rounded",
+		},
+	})
 end
 
 override_filetype()

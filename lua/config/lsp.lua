@@ -1,7 +1,7 @@
 local helpers = require("config.utils.helpers")
 
 local function disable_default_keykeymappings()
-	local globals = { "grn", "gra", "grr", "gri", "gO" }
+	local globals = { "grn", "gra", "grr", "gri", "gO", "]d", "[d" }
 	for _, key in pairs(globals) do
 		vim.keymap.del("n", key)
 	end
@@ -18,6 +18,12 @@ local function lsp_attach()
 			helpers.keymap("n", "<leader>rn", vim.lsp.buf.rename, { buffer = bufnr, desc = "Rename symbol" })
 			helpers.keymap("n", "<leader>ca", vim.lsp.buf.code_action, { buffer = bufnr, desc = "Code action" })
 			helpers.keymap("n", "gr", vim.lsp.buf.references, { buffer = bufnr, desc = "List references" })
+			helpers.keymap("n", "]d", function()
+				vim.diagnostic.jump({ count = 1, float = true })
+			end)
+			helpers.keymap("n", "[d", function()
+				vim.diagnostic.jump({ count = -1, float = true })
+			end)
 			helpers.keymap("n", "<leader>fa", function()
 				vim.lsp.buf.code_action({
 					filter = function(a)
