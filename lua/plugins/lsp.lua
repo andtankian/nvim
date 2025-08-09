@@ -1,9 +1,79 @@
+local helpers = require("config.utils.helpers")
 local js_based_languages = {
 	"typescript",
 	"javascript",
 }
 
 return {
+	{
+		"saghen/blink.cmp",
+		dependencies = "rafamadriz/friendly-snippets",
+		version = "*",
+		---@module 'blink.cmp'
+		---@type blink.cmp.Config
+		opts = {
+			enabled = function()
+				return not vim.tbl_contains({ "DressingInput" }, vim.bo.filetype)
+			end,
+			cmdline = { enabled = false },
+			signature = { enabled = false },
+			keymap = {
+				preset = "default",
+				["<Tab>"] = { "select_next", "fallback" },
+				["<S-Tab>"] = { "select_prev", "fallback" },
+				["<Cr>"] = { "accept", "fallback" },
+			},
+			completion = {
+				documentation = {
+					auto_show = true,
+				},
+			},
+			sources = {
+				default = { "lsp", "path", "snippets", "buffer" },
+			},
+		},
+		opts_extend = { "sources.default" },
+	},
+	{
+		"antosha417/nvim-lsp-file-operations",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-tree/nvim-tree.lua",
+		},
+		opts = {},
+	},
+	{
+		"esmuellert/nvim-eslint",
+		opts = {
+			settings = {
+				format = false,
+				useFlatConfig = true,
+				experimental = { useFlatConfig = false },
+			},
+		},
+	},
+	{
+		"stevearc/conform.nvim",
+		opts = {
+			formatters_by_ft = {
+				lua = { "stylua" },
+				json = { "prettier" },
+				javascript = { "prettier" },
+				typescript = { "prettier" },
+				typescriptreact = { "prettier" },
+				yaml = { "yamlfmt" },
+				terraform = { "terraform_fmt" },
+				python = { "black" },
+			},
+		},
+		config = function(_, opts)
+			require("conform").setup(opts)
+
+			helpers.keymap("n", "<leader>fm", function()
+				require("conform").format({ async = true, lsp_fallback = true })
+			end, { desc = "Format file" })
+		end,
+	},
 	{
 		"mfussenegger/nvim-dap",
 		commit = "567da83810dd9da32f9414d941bc6848715fc102",
@@ -109,57 +179,6 @@ return {
 						},
 					})
 				end,
-			},
-		},
-	},
-	{
-		"andtankian/nxtest.nvim",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-		},
-		opts = {
-			terminal_position = "vertical",
-		},
-	},
-	{
-		"akinsho/toggleterm.nvim",
-		version = "*",
-		opts = {
-			auto_scroll = false,
-		},
-		keys = {
-			{
-				"<C-t>",
-				"<cmd>1ToggleTerm direction=float<cr>",
-				desc = "Toggle terminal",
-				mode = { "n", "t" },
-			},
-			{
-				"<leader>tn",
-				function()
-					local random_num = math.random(2, 999)
-					vim.cmd(random_num .. "ToggleTerm direction=horizontal")
-				end,
-				desc = "New horizontal terminal",
-				mode = { "n" },
-			},
-			{
-				"<leader>ta",
-				"<cmd>ToggleTerm direction=horizontal<cr>",
-				desc = "Toggle all terminals",
-				mode = { "n" },
-			},
-			{
-				"<leader>ts",
-				"<cmd>TermSelect<cr>",
-				desc = "Select terminal",
-				mode = { "n" },
-			},
-			{
-				"<C-x>",
-				"<C-\\><C-n>",
-				mode = "t",
-				desc = "Exit terminal mode",
 			},
 		},
 	},

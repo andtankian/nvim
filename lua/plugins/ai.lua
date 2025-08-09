@@ -1,57 +1,25 @@
-local utils = require("utils")
+local helpers = require("config.utils.helpers")
 
 return {
-	{
-		"github/copilot.vim",
-		config = function()
-			local g = vim.g
-			g.copilot_no_tab_map = true
-			utils.map(
-				"i",
-				"<C-j>",
-				'copilot#Accept("<cr>")',
-				{ noremap = true, silent = true, expr = true, replace_keycodes = false, desc = "Accept copilot suggestion" }
-			)
-		end,
-	},
-	{
-		"ravitemer/mcphub.nvim",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-		},
-		cmd = "MCPHub",
-		build = "npm install -g mcp-hub@latest",
-		opts = {},
-	},
 	{
 		"olimorris/codecompanion.nvim",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-			"nvim-treesitter/nvim-treesitter",
-			"hrsh7th/nvim-cmp",
-			"nvim-telescope/telescope.nvim",
-			{ "stevearc/dressing.nvim", opts = {} },
+			"treesitter",
+			"mcphub",
 		},
 		opts = {
-			adapters = {
-				copilot = function()
-					return require("codecompanion.adapters").extend("copilot", {
-						schema = {
-							model = {
-								default = "claude-sonnet-4",
-							},
+			strategies = {
+				chat = {
+					adapter = "copilot",
+					model = "claude-sonnet-4",
+					tools = {
+						opts = {
+							auto_submit_errors = true,
+							auto_submit_success = true,
 						},
-					})
-				end,
-				anthropic = function()
-					return require("codecompanion.adapters").extend("anthropic", {
-						schema = {
-							model = {
-								default = "claude-3-5-sonnet-latest",
-							},
-						},
-					})
-				end,
+					},
+				},
 			},
 			extensions = {
 				mcphub = {
@@ -62,62 +30,16 @@ return {
 						make_slash_commands = true,
 					},
 				},
-				vectorcode = {
-					opts = { add_tool = true, add_slash_command = true, tool_opts = {} },
-				},
-			},
-			display = {
-				chat = {
-					show_header_separator = false,
-				},
-			},
-			strategies = {
-				chat = {
-					adapter = "anthropic",
-					slash_commands = {
-						["buffer"] = {
-							opts = {
-								provider = "telescope",
-							},
-						},
-						["sequentialthinking"] = {
-							description = "Think step by step and provide a detailed final solution.",
-							---@param chat CodeCompanion.Chat
-							callback = function(chat)
-								chat:add_buf_message({
-									content = [[To accomplish this, you use @{mcp} tool called sequential-thinkin to think step by step and provide a detailed final solution. This tool usually uses camelCase on its parameter, make sure you call it correctly. At the end, you will provide a final solution without applying in the code, just show me what you get.]],
-								})
-							end,
-							opts = {
-								contains_code = false,
-							},
-						},
-					},
-					tools = {
-						opts = {
-							auto_submit_errors = true,
-							auto_submit_success = true,
-						},
-					},
-				},
-				inline = {
-					adapter = "copilot",
-				},
-				agent = {
-					adapter = "copilot",
-				},
 			},
 			prompt_library = {
 				["Commit concise"] = {
 					strategy = "chat",
 					description = "Generate a conventional commit message without long description.",
 					opts = {
-						index = 11,
-						is_default = true,
 						short_name = "commit-concise",
 						auto_submit = true,
 					},
-					references = {
+					context = {
 						{
 							type = "file",
 							path = {
@@ -129,8 +51,6 @@ return {
 						{
 							role = "user",
 							content = function()
-								vim.g.codecompanion_auto_tool_mode = true
-
 								return string.format(
 									[[I want you to use the @{cmd_runner} tool to create a commit using a concise commit message that follows the conventional commit format. Make sure to:
 1. Use only a header (no detailed description).
@@ -148,7 +68,6 @@ Here is the diff:
 							end,
 							opts = {
 								contains_code = true,
-								auto_submit = true,
 							},
 						},
 					},
@@ -160,7 +79,7 @@ Here is the diff:
 						short_name = "commit-and-pr",
 						adapter = "anthropic",
 					},
-					references = {
+					context = {
 						{
 							type = "file",
 							path = {
@@ -181,8 +100,6 @@ Here is the diff:
 							{
 								role = "user",
 								content = function()
-									vim.g.codecompanion_auto_tool_mode = true
-
 									return string.format(
 										[[I want you to use the @{cmd_runner} tool to create a commit using the conventional commit format. Make sure to:
 1. Use the provided diff to generate a commit message.
@@ -246,18 +163,28 @@ Execute these steps precisely and efficiently.]],
 				},
 			},
 		},
+		keys = {
+			{ "<leader>cc", "<cmd>CodeCompanionChat Toggle<cr>", mode = "n", desc = "Toggle Code Companion" },
+			{ "<leader>cc", "<cmd>CodeCompanionChat Add<cr>", mode = "v", desc = "Add to Code Companion" },
+		},
 		config = function(_, opts)
 			require("codecompanion").setup(opts)
-
-			utils.map("n", "<leader>cc", "<cmd>CodeCompanionChat Toggle<cr>", { noremap = true, silent = true })
-			utils.map("v", "<leader>cc", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
+			vim.g.codecompanion_auto_tool_mode = true
 			vim.api.nvim_create_user_command("Cc", "CodeCompanion <args>", { nargs = "*" })
 		end,
 	},
 	{
-		"Davidyz/VectorCode",
-		version = "*",
-		build = "pipx upgrade vectorcode", -- recommended if you set `version = "*"` or follow the main branch
-		dependencies = { "nvim-lua/plenary.nvim" },
+		"github/copilot.vim",
+		event = "InsertEnter",
+		config = function()
+			local g = vim.g
+			g.copilot_no_tab_map = true
+			helpers.keymap(
+				"i",
+				"<C-j>",
+				'copilot#Accept("<cr>")',
+				{ silent = true, expr = true, replace_keycodes = false, desc = "Accept copilot suggestion" }
+			)
+		end,
 	},
 }

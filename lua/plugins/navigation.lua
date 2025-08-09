@@ -1,6 +1,71 @@
-local utils = require("utils")
+local helpers = require("config.utils.helpers")
 
 return {
+	{
+		"nvim-tree/nvim-tree.lua",
+		dependencies = {
+			"nvim-tree/nvim-web-devicons",
+			"stevearc/dressing.nvim",
+		},
+		opts = {
+			on_attach = function(bufnr)
+				local api = require("nvim-tree.api")
+				api.config.mappings.default_on_attach(bufnr)
+				vim.keymap.del("n", "<C-t>", { buffer = bufnr })
+			end,
+			hijack_cursor = true,
+			hijack_unnamed_buffer_when_opening = true,
+			live_filter = {
+				prefix = "🔍  ",
+				always_show_folders = false,
+			},
+			update_focused_file = {
+				enable = true,
+			},
+			view = {
+				adaptive_size = true,
+				relativenumber = true,
+				width = {},
+			},
+			filesystem_watchers = {
+				enable = true,
+			},
+			actions = {
+				open_file = {
+					resize_window = true,
+					quit_on_open = false,
+				},
+			},
+			diagnostics = {
+				enable = true,
+			},
+			renderer = {
+				root_folder_label = false,
+				highlight_git = "icon",
+				highlight_diagnostics = "icon",
+				highlight_opened_files = "none",
+				indent_markers = {
+					enable = true,
+				},
+				icons = {
+					show = {
+						file = true,
+						folder = true,
+						folder_arrow = true,
+						git = true,
+					},
+				},
+			},
+		},
+		config = function(_, opts)
+			require("nvim-tree").setup(opts)
+
+			local api = require("nvim-tree.api")
+
+			helpers.keymap("n", "<C-n>", api.tree.toggle)
+			helpers.keymap("n", "<leader>e", api.tree.focus)
+		end,
+	},
 	{
 		"nvim-telescope/telescope.nvim",
 		dependencies = {
@@ -146,7 +211,7 @@ return {
 				})
 			end
 
-			utils.map("n", "<leader>fb", Buffer_searcher, {
+			helpers.keymap("n", "<leader>fb", Buffer_searcher, {
 				desc = "List buffers",
 			})
 
@@ -162,109 +227,6 @@ return {
 			telescope.load_extension("live_grep_args")
 			telescope.load_extension("emoji")
 			telescope.load_extension("advanced_git_search")
-		end,
-	},
-	{
-		"nvim-tree/nvim-tree.lua",
-		dependencies = {
-			"nvim-tree/nvim-web-devicons",
-		},
-		opts = {
-			filters = {
-				dotfiles = false,
-			},
-			disable_netrw = true,
-			hijack_netrw = true,
-			hijack_cursor = true,
-			hijack_unnamed_buffer_when_opening = false,
-			sync_root_with_cwd = true,
-			update_focused_file = {
-				enable = true,
-				update_root = false,
-			},
-			view = {
-				adaptive_size = true,
-				side = "left",
-				preserve_window_proportions = true,
-				width = {
-					max = 60,
-				},
-				relativenumber = true,
-			},
-			git = {
-				enable = true,
-				ignore = true,
-			},
-			filesystem_watchers = {
-				enable = true,
-			},
-			actions = {
-				open_file = {
-					resize_window = false,
-					quit_on_open = true,
-				},
-			},
-			on_attach = function(bufnr)
-				local api = require("nvim-tree.api")
-
-				api.config.mappings.default_on_attach(bufnr)
-				vim.keymap.del("n", "<C-t>", { buffer = bufnr })
-			end,
-			renderer = {
-				root_folder_label = false,
-				highlight_git = true,
-				highlight_opened_files = "none",
-				indent_markers = {
-					enable = true,
-				},
-				icons = {
-					show = {
-						file = true,
-						folder = true,
-						folder_arrow = true,
-						git = true,
-					},
-					glyphs = {
-						default = "󰈚",
-						symlink = "",
-						folder = {
-							default = "",
-							empty = "",
-							empty_open = "",
-							open = "",
-							symlink = "",
-							symlink_open = "",
-							arrow_open = "",
-							arrow_closed = "",
-						},
-						git = {
-							unstaged = "✗",
-							staged = "✓",
-							unmerged = "",
-							renamed = "➜",
-							untracked = "★",
-							deleted = "",
-							ignored = "◌",
-						},
-					},
-				},
-			},
-		},
-		config = function(_, opts)
-			require("nvim-tree").setup(opts)
-
-			utils.map(
-				"n",
-				"<C-n>",
-				"<cmd>NvimTreeToggle<CR>",
-				{ desc = "Toggle NvimTree File Explorer", noremap = true, silent = true }
-			)
-			utils.map(
-				"n",
-				"<leader>e",
-				"<cmd>NvimTreeFocus<CR>",
-				{ desc = "Focus NvimTree File Explorer", noremap = true, silent = true }
-			)
 		end,
 	},
 }

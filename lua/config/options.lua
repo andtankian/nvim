@@ -1,0 +1,33 @@
+local opt = vim.opt
+
+opt.scrolloff = 10
+opt.laststatus = 3
+opt.showmode = false
+opt.clipboard = "unnamedplus"
+opt.cursorline = true
+opt.cursorlineopt = "number"
+opt.expandtab = true
+opt.shiftwidth = 2
+opt.smartindent = true
+opt.tabstop = 2
+opt.softtabstop = 2
+opt.ignorecase = true
+opt.smartcase = true
+opt.mouse = "a"
+opt.number = true
+opt.relativenumber = true
+opt.ruler = false
+opt.signcolumn = "yes:1"
+opt.numberwidth = 1
+opt.shortmess:append("atTsI")
+opt.splitbelow = true
+opt.splitright = true
+opt.termguicolors = true
+opt.timeoutlen = 400
+opt.undofile = true
+opt.updatetime = 250
+opt.foldcolumn = "0"
+opt.foldlevel = 99
+opt.foldlevelstart = 99
+opt.foldenable = true
+opt.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]

@@ -1,25 +1,23 @@
-local utils = require("utils")
+local helpers = require("config.utils.helpers")
 
 local g = vim.g
 
 g.mapleader = " "
 g.maplocalleader = " "
 
-utils.map("n", "<Space>", "")
-utils.map("n", "<Esc>", "<cmd> noh <CR>")
-utils.map("n", "<C-h>", "<C-w>h")
-utils.map("n", "<C-l>", "<C-w>l")
-utils.map("n", "<C-j>", "<C-w>j")
-utils.map("n", "<C-k>", "<C-w>k")
+helpers.keymap("n", "<Space>", "")
+helpers.keymap("n", "<Esc>", "<cmd> noh <CR>")
+helpers.keymap("n", "<C-h>", "<C-w>h")
+helpers.keymap("n", "<C-l>", "<C-w>l")
+helpers.keymap("n", "<C-j>", "<C-w>j")
+helpers.keymap("n", "<C-k>", "<C-w>k")
 
 -- Buffer navigation
-utils.map("n", "<Tab>", "<cmd>bnext<CR>")
-utils.map("n", "<S-Tab>", "<cmd>bprevious<CR>")
-utils.map("n", "<leader>x", "<cmd>bp|bd #<CR>")
+helpers.keymap("n", "<Tab>", "<cmd>bnext<CR>")
+helpers.keymap("n", "<S-Tab>", "<cmd>bprevious<CR>")
+helpers.keymap("n", "<leader>x", "<cmd>bp|bd #<CR>")
 
--- Delete all buffers except protected ones
----@diagnostic disable-next-line: unused-local, unused-function
-function Delete_all_buffers_except_protected()
+local function delete_all_buffers_except_protected()
 	local protected_filetypes = {
 		"NvimTree", -- File explorer
 		"TelescopePrompt", -- Telescope
@@ -50,4 +48,4 @@ function Delete_all_buffers_except_protected()
 	end
 end
 
-utils.map("n", "<leader>X", "<cmd>lua Delete_all_buffers_except_protected()<CR>")
+helpers.keymap("n", "<leader>X", delete_all_buffers_except_protected)
