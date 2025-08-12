@@ -6,7 +6,9 @@ return {
 	},
 	{ "echasnovski/mini.surround", version = "*", opts = {} },
 	{ "echasnovski/mini.ai", version = "*", opts = {} },
-	{ "echasnovski/mini.indentscope", version = "*" },
+	{ "echasnovski/mini.indentscope", version = "*", opts = {
+		symbol = "│",
+	} },
 	{
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",

@@ -6,7 +6,8 @@ return {
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"treesitter",
-			"mcphub",
+			"ravitemer/mcphub.nvim",
+			"ravitemer/codecompanion-history.nvim",
 		},
 		opts = {
 			strategies = {
@@ -28,6 +29,15 @@ return {
 						show_result_in_chat = true,
 						make_vars = true,
 						make_slash_commands = true,
+					},
+				},
+				history = {
+					enabled = true,
+					opts = {
+						picker = "telescope",
+						auto_generate_title = false,
+						continue_last_chat = false,
+						auto_save = false,
 					},
 				},
 			},
@@ -77,7 +87,7 @@ Here is the diff:
 					description = "Generate a commit, push the branch and create a PR.",
 					opts = {
 						short_name = "commit-and-pr",
-						adapter = "anthropic",
+						adapter = "copilot",
 					},
 					context = {
 						{

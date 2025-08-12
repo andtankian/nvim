@@ -52,8 +52,9 @@ local function override_signs()
 				[vim.diagnostic.severity.HINT] = "",
 			},
 		},
-		underline = true,
+		underline = false,
 		update_in_insert = false,
+    virtual_text = true,
 		severity_sort = true,
 		float = {
 			border = "rounded",
