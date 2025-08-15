@@ -15,6 +15,11 @@ return {
 		opts = {},
 	},
 	{
+		"windwp/nvim-ts-autotag",
+		lazy = false,
+		opts = {},
+	},
+	{
 		"tversteeg/registers.nvim",
 		cmd = "Registers",
 		config = true,
