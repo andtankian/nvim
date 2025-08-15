@@ -1,6 +1,29 @@
 local helpers = require("config.utils.helpers")
 
+local function filter_out_messages(message)
+	local allowed = {
+		"content",
+		"role",
+		"reasoning",
+		"tool_calls",
+	}
+
+	for key, _ in pairs(message) do
+		if not vim.tbl_contains(allowed, key) then
+			message[key] = nil
+		end
+	end
+	return message
+end
+
 return {
+	{
+		"Davidyz/VectorCode",
+		version = "*",
+		build = "uv tool upgrade vectorcode", -- This helps keeping the CLI up-to-date
+		-- build = "pipx upgrade vectorcode", -- If you used pipx to install the CLI
+		dependencies = { "nvim-lua/plenary.nvim" },
+	},
 	{
 		"olimorris/codecompanion.nvim",
 		dependencies = {
@@ -8,112 +31,314 @@ return {
 			"treesitter",
 			"ravitemer/mcphub.nvim",
 			"ravitemer/codecompanion-history.nvim",
+			"Davidyz/VectorCode",
 		},
-		opts = {
-			strategies = {
-				chat = {
-					adapter = "copilot",
-					model = "claude-sonnet-4",
-					tools = {
-						opts = {
-							auto_submit_errors = true,
-							auto_submit_success = true,
-						},
-					},
-				},
-			},
-			extensions = {
-				mcphub = {
-					callback = "mcphub.extensions.codecompanion",
-					opts = {
-						show_result_in_chat = true,
-						make_vars = true,
-						make_slash_commands = true,
-					},
-				},
-				history = {
-					enabled = true,
-					opts = {
-						picker = "telescope",
-						auto_generate_title = false,
-						continue_last_chat = false,
-						auto_save = false,
-					},
-				},
-			},
-			prompt_library = {
-				["Commit concise"] = {
-					strategy = "chat",
-					description = "Generate a conventional commit message without long description.",
-					opts = {
-						short_name = "commit-concise",
-						auto_submit = true,
-					},
-					context = {
-						{
-							type = "file",
-							path = {
-								".vscode/settings.json",
-							},
-						},
-					},
-					prompts = {
-						{
-							role = "user",
-							content = function()
-								return string.format(
-									[[I want you to use the @{cmd_runner} tool to create a commit using a concise commit message that follows the conventional commit format. Make sure to:
-1. Use only a header (no detailed description).
-2. Choose the correct scope based on the changes.
-3. Ensure the message is clear, relevant, and properly formatted.
-4. DO NOT run git add, as all the changes is provided and already staged.
-
-Here is the diff:
-
-```diff
-%s
-```]],
-									vim.fn.system("git diff --no-ext-diff --staged")
-								)
-							end,
-							opts = {
-								contains_code = true,
-							},
-						},
-					},
-				},
-				["Commit and PR"] = {
-					strategy = "workflow",
-					description = "Generate a commit, push the branch and create a PR.",
-					opts = {
-						short_name = "commit-and-pr",
-						adapter = "copilot",
-					},
-					context = {
-						{
-							type = "file",
-							path = {
-								".github/pull_request_template.md",
-								".vscode/settings.json",
-							},
-						},
-					},
-					prompts = {
-						{
-							{
-								role = "system",
-								content = [[You are an expert creating commits using the conventional commit format. You know exactly how to generate a commit message based on any provided diff. You're also an expert in creating pull requests using the GitHub CLI.]],
-								opts = {
-									visible = false,
+		-- dir = "~/dev/codecompanion.nvim",
+		dev = false,
+		opts = function()
+			return {
+				adapters = {
+					copilot = function()
+						return require("codecompanion.adapters").extend("copilot", {
+							schema = {
+								model = {
+									default = "claude-sonnet-4",
 								},
 							},
+						})
+					end,
+					anthropic_with_bearer_token = function()
+						local utils = require("codecompanion.utils.adapters")
+						local tokens = require("codecompanion.utils.tokens")
+
+						return require("codecompanion.adapters").extend("anthropic", {
+							env = {
+								bearer_token = "ANTHROPIC_BEARER_TOKEN",
+							},
+							headers = {
+								["content-type"] = "application/json",
+								["authorization"] = "Bearer ${bearer_token}",
+								["anthropic-version"] = "2023-06-01",
+								["anthropic-beta"] = "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,fine-grained-tool-streaming-2025-05-14",
+							},
+							handlers = {
+								setup = function(self)
+									-- Same as current setup function but removing the additional headers being added
+
+									if self.opts and self.opts.stream then
+										self.parameters.stream = true
+									end
+
+									local model = self.schema.model.default
+									local model_opts = self.schema.model.choices[model]
+									if model_opts and model_opts.opts then
+										self.opts = vim.tbl_deep_extend("force", self.opts, model_opts.opts)
+										if not model_opts.opts.has_vision then
+											self.opts.vision = false
+										end
+									end
+
+									return true
+								end,
+
+								form_messages = function(self, messages)
+									-- Same as current form_message but adding Claude Code system message at the first system message
+
+									local has_tools = false
+
+									local system = vim
+										.iter(messages)
+										:filter(function(msg)
+											return msg.role == "system"
+										end)
+										:map(function(msg)
+											return {
+												type = "text",
+												text = msg.content,
+												cache_control = nil,
+											}
+										end)
+										:totable()
+
+									-- Add the Claude Code system message at the beginning (required to make it work)
+									table.insert(system, 1, {
+										type = "text",
+										text = "You are Claude Code, Anthropic's official CLI for Claude.",
+										cache_control = {
+											type = "ephemeral",
+										},
+									})
+
+									system = next(system) and system or nil
+
+									messages = vim
+										.iter(messages)
+										:filter(function(msg)
+											return msg.role ~= "system"
+										end)
+										:totable()
+
+									messages = vim.tbl_map(function(message)
+										if message.opts and message.opts.tag == "image" and message.opts.mimetype then
+											if self.opts and self.opts.vision then
+												message.content = {
+													{
+														type = "image",
+														source = {
+															type = "base64",
+															media_type = message.opts.mimetype,
+															data = message.content,
+														},
+													},
+												}
+											else
+												return nil
+											end
+										end
+
+										message = filter_out_messages(message)
+
+										if message.role == self.roles.user or message.role == self.roles.llm then
+											if message.role == self.roles.user and message.content == "" then
+												message.content = "<prompt></prompt>"
+											end
+
+											if type(message.content) == "string" then
+												message.content = {
+													{ type = "text", text = message.content },
+												}
+											end
+										end
+
+										if message.tool_calls and vim.tbl_count(message.tool_calls) > 0 then
+											has_tools = true
+										end
+
+										if message.role == "tool" then
+											message.role = self.roles.user
+										end
+
+										if has_tools and message.role == self.roles.llm and message.tool_calls then
+											message.content = message.content or {}
+											for _, call in ipairs(message.tool_calls) do
+												table.insert(message.content, {
+													type = "tool_use",
+													id = call.id,
+													name = call["function"].name,
+													input = vim.json.decode(call["function"].arguments),
+												})
+											end
+											message.tool_calls = nil
+										end
+
+										if message.reasoning and type(message.content) == "table" then
+											table.insert(message.content, 1, {
+												type = "thinking",
+												thinking = message.reasoning.content,
+												signature = message.reasoning._data.signature,
+											})
+										end
+
+										return message
+									end, messages)
+
+									messages = utils.merge_messages(messages)
+
+									if has_tools then
+										for _, m in ipairs(messages) do
+											if m.role == self.roles.user and m.content and m.content ~= "" then
+												if type(m.content) == "table" and m.content.type then
+													m.content = { m.content }
+												end
+
+												if type(m.content) == "table" and vim.islist(m.content) then
+													local consolidated = {}
+													for _, block in ipairs(m.content) do
+														if block.type == "tool_result" then
+															local prev = consolidated[#consolidated]
+															if prev and prev.type == "tool_result" and prev.tool_use_id == block.tool_use_id then
+																prev.content = prev.content .. block.content
+															else
+																table.insert(consolidated, block)
+															end
+														else
+															table.insert(consolidated, block)
+														end
+													end
+													m.content = consolidated
+												end
+											end
+										end
+									end
+
+									local breakpoints_used = 0
+									for i = #messages, 1, -1 do
+										local msgs = messages[i]
+										if msgs.role == self.roles.user then
+											for _, msg in ipairs(msgs.content) do
+												if msg.type ~= "text" or msg.text == "" then
+													goto continue
+												end
+												if
+													tokens.calculate(msg.text) >= self.opts.cache_over
+													and breakpoints_used < self.opts.cache_breakpoints
+												then
+													msg.cache_control = { type = "ephemeral" }
+													breakpoints_used = breakpoints_used + 1
+												end
+												::continue::
+											end
+										end
+									end
+									if system and breakpoints_used < self.opts.cache_breakpoints then
+										for _, prompt in ipairs(system) do
+											if breakpoints_used < self.opts.cache_breakpoints then
+												prompt.cache_control = { type = "ephemeral" }
+												breakpoints_used = breakpoints_used + 1
+											end
+										end
+									end
+
+									return { system = system, messages = messages }
+								end,
+							},
+						})
+					end,
+				},
+				strategies = {
+					chat = {
+						adapter = "copilot",
+						tools = {
+							opts = {
+								auto_submit_errors = true,
+								auto_submit_success = true,
+							},
+						},
+					},
+				},
+				extensions = {
+					mcphub = {
+						callback = "mcphub.extensions.codecompanion",
+						opts = {
+							show_result_in_chat = true,
+							make_vars = true,
+							make_slash_commands = true,
+						},
+					},
+					history = {
+						enabled = true,
+						opts = {
+							picker = "telescope",
+							auto_generate_title = false,
+							continue_last_chat = false,
+							auto_save = false,
+						},
+					},
+					vectorcode = {
+						---@type VectorCode.CodeCompanion.ExtensionOpts
+						opts = {
+							tool_group = {
+								-- this will register a tool group called `@vectorcode_toolbox` that contains all 3 tools
+								enabled = true,
+								-- a list of extra tools that you want to include in `@vectorcode_toolbox`.
+								-- if you use @vectorcode_vectorise, it'll be very handy to include
+								-- `file_search` here.
+								extras = {},
+								collapse = false, -- whether the individual tools should be shown in the chat
+							},
+							tool_opts = {
+								---@type VectorCode.CodeCompanion.ToolOpts
+								["*"] = {},
+								---@type VectorCode.CodeCompanion.LsToolOpts
+								ls = {},
+								---@type VectorCode.CodeCompanion.VectoriseToolOpts
+								vectorise = {},
+								---@type VectorCode.CodeCompanion.QueryToolOpts
+								query = {
+									max_num = { chunk = -1, document = -1 },
+									default_num = { chunk = 50, document = 10 },
+									include_stderr = false,
+									use_lsp = false,
+									no_duplicate = true,
+									chunk_mode = false,
+									---@type VectorCode.CodeCompanion.SummariseOpts
+									summarise = {
+										---@type boolean|(fun(chat: CodeCompanion.Chat, results: VectorCode.QueryResult[]):boolean)|nil
+										enabled = false,
+										adapter = nil,
+										query_augmented = true,
+									},
+								},
+								files_ls = {},
+								files_rm = {},
+							},
+						},
+					},
+				},
+				prompt_library = {
+					["Commit concise"] = {
+						strategy = "chat",
+						description = "Generate a conventional commit message without long description.",
+						opts = {
+							short_name = "commit-concise",
+							auto_submit = true,
+						},
+						context = {
+							{
+								type = "file",
+								path = {
+									".vscode/settings.json",
+								},
+							},
+						},
+						prompts = {
 							{
 								role = "user",
 								content = function()
 									return string.format(
-										[[I want you to use the @{cmd_runner} tool to create a commit using the conventional commit format. Make sure to:
-1. Use the provided diff to generate a commit message.
-2. Write only the header (no detailed description and no scope).
+										[[I want you to use the @{cmd_runner} tool to create a commit using a concise commit message that follows the conventional commit format. Make sure to:
+1. Use only a header (no detailed description).
+2. Choose the correct scope based on the changes.
 3. Ensure the message is clear, relevant, and properly formatted.
 4. DO NOT run git add, as all the changes is provided and already staged.
 
@@ -127,34 +352,83 @@ Here is the diff:
 								end,
 								opts = {
 									contains_code = true,
-									auto_submit = true,
 								},
 							},
 						},
-						{
+					},
+					["Commit and PR"] = {
+						strategy = "workflow",
+						description = "Generate a commit, push the branch and create a PR.",
+						opts = {
+							short_name = "commit-and-pr",
+							adapter = "copilot",
+						},
+						context = {
 							{
-								role = "user",
-								content = "Checkout to a new branch with a relevant name based on the commit message.",
-								opts = {
-									contains_code = false,
-									auto_submit = true,
+								type = "file",
+								path = {
+									".github/pull_request_template.md",
+									".vscode/settings.json",
 								},
 							},
 						},
-						{
+						prompts = {
 							{
-								role = "user",
-								content = "Push the new created and switched branch to the remote repository using the --set-upstream flag.",
-								opts = {
-									contains_code = false,
-									auto_submit = true,
+								{
+									role = "system",
+									content = [[You are an expert creating commits using the conventional commit format. You know exactly how to generate a commit message based on any provided diff. You're also an expert in creating pull requests using the GitHub CLI.]],
+									opts = {
+										visible = false,
+									},
+								},
+								{
+									role = "user",
+									content = function()
+										return string.format(
+											[[I want you to use the @{cmd_runner} tool to create a commit using the conventional commit format. Make sure to:
+1. Use the provided diff to generate a commit message.
+2. Write only the header (no detailed description and no scope).
+3. Ensure the message is clear, relevant, and properly formatted.
+4. DO NOT run git add, as all the changes is provided and already staged.
+
+Here is the diff:
+
+```diff
+%s
+```]],
+											vim.fn.system("git diff --no-ext-diff --staged")
+										)
+									end,
+									opts = {
+										contains_code = true,
+										auto_submit = true,
+									},
 								},
 							},
-						},
-						{
 							{
-								role = "user",
-								content = [[Create a pull request using GitHub CLI:
+								{
+									role = "user",
+									content = "Checkout to a new branch with a relevant name based on the commit message.",
+									opts = {
+										contains_code = false,
+										auto_submit = true,
+									},
+								},
+							},
+							{
+								{
+									role = "user",
+									content = "Push the new created and switched branch to the remote repository using the --set-upstream flag.",
+									opts = {
+										contains_code = false,
+										auto_submit = true,
+									},
+								},
+							},
+							{
+								{
+									role = "user",
+									content = [[Create a pull request using GitHub CLI:
 - Use the provided diff to fill out the PR body according to the given template.
 - Scape correctly the crasis symbol (```) in the body.
 - Set the base branch to main.
@@ -163,16 +437,17 @@ Here is the diff:
 - Generate a clear, first word capitalized title based on the commit message, but do not use the Conventional Commit format—use a plain descriptive title instead.
 
 Execute these steps precisely and efficiently.]],
-								opts = {
-									contains_code = false,
-									auto_submit = false,
+									opts = {
+										contains_code = false,
+										auto_submit = false,
+									},
 								},
 							},
 						},
 					},
 				},
-			},
-		},
+			}
+		end,
 		keys = {
 			{ "<leader>cc", "<cmd>CodeCompanionChat Toggle<cr>", mode = "n", desc = "Toggle Code Companion" },
 			{ "<leader>cc", "<cmd>CodeCompanionChat Add<cr>", mode = "v", desc = "Add to Code Companion" },
