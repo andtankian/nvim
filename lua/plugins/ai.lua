@@ -1,12 +1,11 @@
 local helpers = require("config.utils.helpers")
 
-local function filter_out_messages(message)
-	local allowed = {
-		"content",
-		"role",
-		"reasoning",
-		"tool_calls",
-	}
+---@param params table Table containing message and allowed_words
+---@return table The filtered message
+local function filter_out_messages(params)
+	local message = params.message
+
+	local allowed = params.allowed_words
 
 	for key, _ in pairs(message) do
 		if not vim.tbl_contains(allowed, key) then
@@ -27,8 +26,8 @@ return {
 	{
 		"olimorris/codecompanion.nvim",
 		dependencies = {
+			"nvim-telescope/telescope.nvim",
 			"nvim-lua/plenary.nvim",
-			"treesitter",
 			"ravitemer/mcphub.nvim",
 			"ravitemer/codecompanion-history.nvim",
 			"Davidyz/VectorCode",
@@ -136,7 +135,8 @@ return {
 											end
 										end
 
-										message = filter_out_messages(message)
+										message =
+											filter_out_messages({ message, allowed_words = { "content", "role", "reasoning", "tool_calls" } })
 
 										if message.role == self.roles.user or message.role == self.roles.llm then
 											if message.role == self.roles.user and message.content == "" then
@@ -275,25 +275,16 @@ return {
 						},
 					},
 					vectorcode = {
-						---@type VectorCode.CodeCompanion.ExtensionOpts
 						opts = {
 							tool_group = {
-								-- this will register a tool group called `@vectorcode_toolbox` that contains all 3 tools
 								enabled = true,
-								-- a list of extra tools that you want to include in `@vectorcode_toolbox`.
-								-- if you use @vectorcode_vectorise, it'll be very handy to include
-								-- `file_search` here.
 								extras = {},
-								collapse = false, -- whether the individual tools should be shown in the chat
+								collapse = false,
 							},
 							tool_opts = {
-								---@type VectorCode.CodeCompanion.ToolOpts
 								["*"] = {},
-								---@type VectorCode.CodeCompanion.LsToolOpts
 								ls = {},
-								---@type VectorCode.CodeCompanion.VectoriseToolOpts
 								vectorise = {},
-								---@type VectorCode.CodeCompanion.QueryToolOpts
 								query = {
 									max_num = { chunk = -1, document = -1 },
 									default_num = { chunk = 50, document = 10 },
@@ -301,9 +292,7 @@ return {
 									use_lsp = false,
 									no_duplicate = true,
 									chunk_mode = false,
-									---@type VectorCode.CodeCompanion.SummariseOpts
 									summarise = {
-										---@type boolean|(fun(chat: CodeCompanion.Chat, results: VectorCode.QueryResult[]):boolean)|nil
 										enabled = false,
 										adapter = nil,
 										query_augmented = true,
@@ -452,8 +441,8 @@ Execute these steps precisely and efficiently.]],
 			{ "<leader>cc", "<cmd>CodeCompanionChat Toggle<cr>", mode = "n", desc = "Toggle Code Companion" },
 			{ "<leader>cc", "<cmd>CodeCompanionChat Add<cr>", mode = "v", desc = "Add to Code Companion" },
 		},
-		config = function(_, opts)
-			require("codecompanion").setup(opts)
+		cmd = { "CodeCompanion", "CodeCompanionChat" },
+		init = function()
 			vim.g.codecompanion_auto_tool_mode = true
 			vim.api.nvim_create_user_command("Cc", "CodeCompanion <args>", { nargs = "*" })
 		end,
@@ -478,6 +467,6 @@ Execute these steps precisely and efficiently.]],
 			"nvim-lua/plenary.nvim",
 		},
 		build = "npm install -g mcp-hub@latest",
-		opts = {},
+		config = true,
 	},
 }
