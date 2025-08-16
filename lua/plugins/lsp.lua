@@ -1,4 +1,5 @@
 local helpers = require("config.utils.helpers")
+
 local js_based_languages = {
 	"typescript",
 	"javascript",
@@ -8,6 +9,7 @@ return {
 	{
 		"saghen/blink.cmp",
 		dependencies = "rafamadriz/friendly-snippets",
+		event = "InsertEnter",
 		version = "*",
 		---@module 'blink.cmp'
 		---@type blink.cmp.Config
@@ -36,14 +38,16 @@ return {
 	},
 	{
 		"antosha417/nvim-lsp-file-operations",
+		ft = "NvimTree",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-tree/nvim-tree.lua",
 		},
-		opts = {},
+		config = true,
 	},
 	{
 		"esmuellert/nvim-eslint",
+		ft = js_based_languages,
 		opts = {
 			settings = {
 				format = false,
@@ -66,16 +70,19 @@ return {
 				python = { "black" },
 			},
 		},
-		config = function(_, opts)
-			require("conform").setup(opts)
-
-			helpers.keymap("n", "<leader>fm", function()
-				require("conform").format({ async = true, lsp_fallback = true })
-			end, { desc = "Format file" })
-		end,
+		keys = {
+			{
+				"<leader>fm",
+				function()
+					require("conform").format({ async = true, lsp_fallback = true })
+				end,
+				desc = "Format file",
+			},
+		},
 	},
 	{
 		"mfussenegger/nvim-dap",
+    ft = js_based_languages,
 		commit = "567da83810dd9da32f9414d941bc6848715fc102",
 		config = function()
 			local dap = require("dap")

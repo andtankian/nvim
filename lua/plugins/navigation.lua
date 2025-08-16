@@ -7,6 +7,11 @@ return {
 			"nvim-tree/nvim-web-devicons",
 			"stevearc/dressing.nvim",
 		},
+		init = function()
+			vim.g.loaded_netrw = 1
+			vim.g.loaded_netrwPlugin = 1
+		end,
+		lazy = false,
 		opts = {
 			on_attach = function(bufnr)
 				local api = require("nvim-tree.api")
@@ -57,20 +62,31 @@ return {
 				},
 			},
 		},
+		keys = {
+			{
+				"<C-n>",
+				function()
+					require("nvim-tree.api").tree.toggle()
+				end,
+				"Toggle NvimTree",
+			},
+			{
+				"<leader>e",
+				function()
+					require("nvim-tree.api").tree.focus()
+				end,
+				"Focus on NvimTree cureent buffer file",
+			},
+		},
 		config = function(_, opts)
 			require("nvim-tree").setup(opts)
-
-			local api = require("nvim-tree.api")
-
-			helpers.keymap("n", "<C-n>", api.tree.toggle)
-			helpers.keymap("n", "<leader>e", api.tree.focus)
+			require("nvim-tree.api").tree.close()
 		end,
 	},
 	{
 		"nvim-telescope/telescope.nvim",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-			{ "xiyaowong/telescope-emoji.nvim" },
 			{
 				"nvim-telescope/telescope-live-grep-args.nvim",
 				version = "^1.0.0",

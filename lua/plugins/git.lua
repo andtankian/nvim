@@ -1,6 +1,7 @@
 return {
 	{
 		"tpope/vim-fugitive",
+		cmd = "Git",
 	},
 	{
 		"lewis6991/gitsigns.nvim",
@@ -80,19 +81,20 @@ return {
 	},
 	{
 		"pwntester/octo.nvim",
+		config = true,
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-telescope/telescope.nvim",
 		},
-		opts = {},
+		cmd = "Octo",
 	},
 	{
 		"sindrets/diffview.nvim",
+		config = true,
 		keys = {
 			{ "<leader>dv", "<cmd>DiffviewOpen<cr>", desc = "Open diffview" },
 			{ "<leader>dg", "<cmd>DiffviewClose<cr>", desc = "Close diffview" },
 			{ "<leader>hD", "<cmd>DiffviewFileHistory %<cr>", desc = "Current File history" },
 		},
-		opts = {},
 	},
 }

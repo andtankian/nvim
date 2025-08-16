@@ -5,6 +5,7 @@ local ensure_installed =
 
 return {
 	{
+		cmd = "Mason",
 		"mason-org/mason.nvim",
 		opts = {},
 	},
@@ -16,14 +17,5 @@ return {
 		dependencies = {
 			"mason-org/mason.nvim",
 		},
-	},
-	{
-		"ravitemer/mcphub.nvim",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-		},
-		cmd = "MCPHub",
-		build = "npm install -g mcp-hub@latest",
-		opts = {},
 	},
 }

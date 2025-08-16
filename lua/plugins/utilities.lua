@@ -1,36 +1,50 @@
 return {
 	{
 		"folke/todo-comments.nvim",
+		cmd = "TodoTelescope",
 		dependencies = { "nvim-lua/plenary.nvim" },
-		opts = {},
+		config = true,
 	},
-	{ "echasnovski/mini.surround", version = "*", opts = {} },
-	{ "echasnovski/mini.ai", version = "*", opts = {} },
-	{ "echasnovski/mini.indentscope", version = "*", opts = {
-		symbol = "│",
-	} },
+	{ "echasnovski/mini.surround", version = "*", config = true, event = "InsertEnter" },
+	{
+		"echasnovski/mini.ai",
+		version = "*",
+		config = true,
+	},
+	{
+		"echasnovski/mini.indentscope",
+		version = "*",
+		opts = {
+			symbol = "│",
+			draw = {
+				predicate = function(scope)
+					return not scope.body.is_incomplete and vim.bo.filetype ~= "NvimTree"
+				end,
+			},
+		},
+		ft = { "lua", "javascript", "typescript", "json", "python" },
+	},
 	{
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
-		opts = {},
+		config = true,
 	},
 	{
 		"windwp/nvim-ts-autotag",
-		lazy = false,
-		opts = {},
+		event = "InsertEnter",
+		config = true,
 	},
 	{
 		"tversteeg/registers.nvim",
-		cmd = "Registers",
 		config = true,
 		keys = {
 			{ '"', mode = { "n", "v" } },
 			{ "<C-R>", mode = "i" },
 		},
-		name = "registers",
 	},
 	{
 		"kevinhwang91/nvim-ufo",
+		ft = { "lua", "javascript", "typescript", "json", "python" },
 		dependencies = { "kevinhwang91/promise-async" },
 		opts = {},
 	},

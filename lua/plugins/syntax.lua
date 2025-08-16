@@ -3,7 +3,7 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 		name = "treesitter",
 		build = ":TSUpdate",
-		lazy = false,
+		event = "BufEnter !NvimTree",
 		config = function()
 			local configs = require("nvim-treesitter.configs")
 
@@ -18,6 +18,7 @@ return {
 	},
 	{
 		"nvim-treesitter/nvim-treesitter-context",
-		opts = {},
+		event = "BufEnter",
+		config = true,
 	},
 }
