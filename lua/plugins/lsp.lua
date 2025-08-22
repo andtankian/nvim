@@ -83,7 +83,6 @@ return {
 	{
 		"mfussenegger/nvim-dap",
     ft = js_based_languages,
-		commit = "567da83810dd9da32f9414d941bc6848715fc102",
 		config = function()
 			local dap = require("dap")
 
