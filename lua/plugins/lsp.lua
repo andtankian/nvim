@@ -5,6 +5,19 @@ local js_based_languages = {
 	"javascript",
 }
 
+--- Gets a path to a package in the Mason registry.
+--- Prefer this to `get_package`, since the package might not always be
+--- available yet and trigger errors.
+---@param pkg string
+---@param path? string
+local function get_pkg_path(pkg, path)
+	pcall(require, "mason")
+	local root = vim.env.MASON or (vim.fn.stdpath("data") .. "/mason")
+	path = path or ""
+	local ret = root .. "/packages/" .. pkg .. "/" .. path
+	return ret
+end
+
 return {
 	{
 		"saghen/blink.cmp",
@@ -82,11 +95,24 @@ return {
 	},
 	{
 		"mfussenegger/nvim-dap",
-    ft = js_based_languages,
+		ft = js_based_languages,
 		config = function()
 			local dap = require("dap")
 
 			vim.api.nvim_set_hl(0, "DapStoppedLine", { default = true, link = "Visual" })
+
+			require("dap").adapters["pwa-node"] = {
+				type = "server",
+				host = "localhost",
+				port = "${port}",
+				executable = {
+					command = "node",
+					args = {
+						get_pkg_path("js-debug-adapter", "/js-debug/src/dapDebugServer.js"),
+						"${port}",
+					},
+				},
+			}
 
 			for _, language in ipairs(js_based_languages) do
 				dap.configurations[language] = {
@@ -169,22 +195,6 @@ return {
 			{
 				"theHamsta/nvim-dap-virtual-text",
 				opts = {},
-			},
-			{
-				"microsoft/vscode-js-debug",
-				build = "npm install --legacy-peer-deps --no-save && npx gulp vsDebugServerBundle && rm -rf out && mv dist out",
-				version = "1.*",
-			},
-			{
-				"mxsdev/nvim-dap-vscode-js",
-				config = function()
-					require("dap-vscode-js").setup({
-						debugger_path = vim.fn.resolve(vim.fn.stdpath("data") .. "/lazy/vscode-js-debug"),
-						adapters = {
-							"pwa-node",
-						},
-					})
-				end,
 			},
 		},
 	},
