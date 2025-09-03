@@ -2,9 +2,9 @@ local lsp = {
 	lua_ls = "lua-language-server",
 	ts_ls = "typescript-language-server",
 	jsonls = "json-lsp",
-	terraformls = "terraform-ls",
 	graphql = "graphql-language-service-cli",
 	pylsp = "python-lsp-server",
+	terraformls = "terraform-ls",
 }
 
 local formatters = {
