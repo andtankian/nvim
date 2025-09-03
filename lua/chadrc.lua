@@ -10,7 +10,7 @@ local M = {
 		},
 	},
 	base46 = {
-		theme = "everblush",
+		theme = "tokyonight",
 	},
 }
 
