@@ -45,7 +45,7 @@ return {
 							return require("codecompanion.adapters").extend("copilot", {
 								schema = {
 									model = {
-										default = "gpt-4.1",
+										default = "claude-sonnet-4.5",
 									},
 								},
 							})
@@ -259,7 +259,17 @@ return {
 							opts = {
 								auto_submit_errors = true,
 								auto_submit_success = true,
+								default_tools = {
+									"full_stack_dev",
+								},
 							},
+						},
+					},
+				},
+				memory = {
+					opts = {
+						chat = {
+							enabled = true,
 						},
 					},
 				},
