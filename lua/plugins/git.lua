@@ -5,7 +5,7 @@ return {
 	},
 	{
 		"lewis6991/gitsigns.nvim",
-		event = "BufEnter",
+		event = "VeryLazy",
 		keys = {
 			{
 				"]c",
@@ -94,7 +94,6 @@ return {
 		keys = {
 			{ "<leader>dv", "<cmd>DiffviewOpen<cr>", desc = "Open diffview" },
 			{ "<leader>dg", "<cmd>DiffviewClose<cr>", desc = "Close diffview" },
-			{ "<leader>hD", "<cmd>DiffviewFileHistory %<cr>", desc = "Current File history" },
 		},
 	},
 }

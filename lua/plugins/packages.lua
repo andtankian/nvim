@@ -1,21 +1,23 @@
 local externals = require("config.externals")
 
-local ensure_installed =
-	vim.iter({ externals.formatters, externals.linters, vim.tbl_values(externals.lsp) }):flatten():totable()
+-- Extract LSP server names from languages table
+local lsp_servers = {}
+for _, server_name in pairs(externals.languages) do
+	table.insert(lsp_servers, server_name)
+end
 
 return {
 	{
-		cmd = "Mason",
 		"mason-org/mason.nvim",
+		cmd = "Mason",
 		opts = {},
 	},
 	{
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
+		dependency = "mason-org/mason.nvim",
+		event = "VeryLazy",
 		opts = {
-			ensure_installed = ensure_installed,
-		},
-		dependencies = {
-			"mason-org/mason.nvim",
+			ensure_installed = vim.list_extend(lsp_servers, externals.formatters),
 		},
 	},
 }

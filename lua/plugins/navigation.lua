@@ -1,5 +1,3 @@
-local helpers = require("config.utils.helpers")
-
 return {
 	{
 		"nvim-tree/nvim-tree.lua",
@@ -11,14 +9,14 @@ return {
 			vim.g.loaded_netrw = 1
 			vim.g.loaded_netrwPlugin = 1
 		end,
-		lazy = false,
+    lazy = false,
 		opts = {
 			on_attach = function(bufnr)
 				local api = require("nvim-tree.api")
 				api.config.mappings.default_on_attach(bufnr)
 				vim.keymap.del("n", "<C-t>", { buffer = bufnr })
 			end,
-			hijack_cursor = true,
+			hijack_cursor = false,
 			hijack_unnamed_buffer_when_opening = true,
 			live_filter = {
 				prefix = "🔍  ",
@@ -48,7 +46,7 @@ return {
 				root_folder_label = false,
 				highlight_git = "icon",
 				highlight_diagnostics = "icon",
-				highlight_opened_files = "none",
+				highlight_opened_files = "icon",
 				indent_markers = {
 					enable = true,
 				},
@@ -94,7 +92,6 @@ return {
 			{
 				"xiyaowong/telescope-emoji.nvim",
 			},
-			{ "aaronhallaert/advanced-git-search.nvim", cmd = { "AdvancedGitSearch" } },
 			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 		},
 		opts = {
@@ -116,18 +113,13 @@ return {
 				prompt_prefix = " 🔎  ",
 				selection_caret = "  ",
 				multi_icon = "󰐾 ",
-				border = {},
+				borderchars = { " ", " ", " ", " ", " ", " ", " ", " " },
 				path_display = {
 					shorten = {
 						len = 3,
 					},
 				},
-				mappings = {
-					i = {
-						["<C-Down>"] = require("telescope.actions").cycle_history_next,
-						["<C-Up>"] = require("telescope.actions").cycle_history_prev,
-					},
-				},
+				-- Mappings will be configured in the config function
 			},
 			extensions = {
 				fzf = {
@@ -156,13 +148,20 @@ return {
 			},
 		},
 		keys = {
-			{ "<leader>ff", require("telescope.builtin").find_files, desc = "Find files" },
+			{
+				"<leader>ff",
+				function()
+					require("telescope.builtin").find_files()
+				end,
+				desc = "Find files",
+			},
 			{
 				"<leader>fw",
 				function()
 					local telescope = require("telescope")
 					telescope.extensions.live_grep_args.live_grep_args()
 				end,
+				desc = "Live grep with args",
 			},
 			{
 				"<leader>gc",
@@ -173,16 +172,49 @@ return {
 				desc = "Grep word under cursor",
 				mode = "v",
 			},
-			{ "<leader>gt", require("telescope.builtin").git_status, desc = "Git status" },
-			{ "<leader>fgb", require("telescope.builtin").git_branches, desc = "Git branches" },
-			{ "<leader>fgs", require("telescope.builtin").git_stash, desc = "Git stash" },
-			{ "<leader>fgc", require("telescope.builtin").git_commits, desc = "Git commits" },
-			{ "<leader>fgh", require("telescope.builtin").git_bcommits, desc = "Git bcommits" },
-			{ "<leader>fr", require("telescope.builtin").resume, desc = "Resume last telescope" },
-			{ "<leader>fo", require("telescope.builtin").oldfiles, desc = "Old files" },
+			{
+				"<leader>gt",
+				function()
+					require("telescope.builtin").git_status()
+				end,
+				desc = "Git status",
+			},
+			{
+				"<leader>fgb",
+				function()
+					require("telescope.builtin").git_branches()
+				end,
+				desc = "Git branches",
+			},
+			{
+				"<leader>fgs",
+				function()
+					require("telescope.builtin").git_stash()
+				end,
+				desc = "Git stash",
+			},
+			{
+				"<leader>fr",
+				function()
+					require("telescope.builtin").resume()
+				end,
+				desc = "Resume last telescope",
+			},
+			{
+				"<leader>fo",
+				function()
+					require("telescope.builtin").oldfiles()
+				end,
+				desc = "Old files",
+			},
 			{ "<leader>fe", ":Telescope emoji<cr>", desc = "Emoji" },
-			{ "<leader>th", ":Telescope themes<cr>", desc = "Nvchad Themes" },
-			{ "<leader>ft", require("telescope.builtin").treesitter, desc = "Treesitter symbols" },
+			{
+				"<leader>ft",
+				function()
+					require("telescope.builtin").treesitter()
+				end,
+				desc = "Treesitter symbols",
+			},
 		},
 		config = function(_, opts)
 			local telescope = require("telescope")
@@ -191,6 +223,14 @@ return {
 			local builtin = require("telescope.builtin")
 			local action_state = require("telescope.actions.state")
 			local actions = require("telescope.actions")
+
+			-- Configure mappings here where telescope is already loaded
+			opts.defaults.mappings = {
+				i = {
+					["<C-Down>"] = actions.cycle_history_next,
+					["<C-Up>"] = actions.cycle_history_prev,
+				},
+			}
 
 			Buffer_searcher = function()
 				builtin.buffers({
@@ -227,7 +267,7 @@ return {
 				})
 			end
 
-			helpers.keymap("n", "<leader>fb", Buffer_searcher, {
+			vim.keymap.set("n", "<leader>fb", Buffer_searcher, {
 				desc = "List buffers",
 			})
 
@@ -242,7 +282,6 @@ return {
 			telescope.load_extension("fzf")
 			telescope.load_extension("live_grep_args")
 			telescope.load_extension("emoji")
-			telescope.load_extension("advanced_git_search")
 		end,
 	},
 }

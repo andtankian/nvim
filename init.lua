@@ -1,8 +1,17 @@
+-- Load core options
 require("config.options")
-require("config.mappings")
+
+-- Load keymaps
+require("config.keymaps")
+
+-- Load custom commands
+require("config.commands")
+
+-- Load plugin manager (lazy.nvim)
 require("config.lazy")
+
+
+-- TODO: Load autocmds
+-- require("config.autocmds")
+--
 require("config.lsp")
-require("config.nvchad")
-require("config.overrides")
-require("config.autocmds")
-require("config.neovide")

@@ -1,67 +1,41 @@
 return {
-	{
-		"nvchad/ui",
-		config = function()
-			require("nvchad")
-		end,
-	},
-	{
-		"nvchad/base46",
-		lazy = true,
-		build = function()
-			require("base46").load_all_highlights()
-		end,
-	},
-	{
-		"MeanderingProgrammer/render-markdown.nvim",
-		ft = { "markdown", "codecompanion" },
-		opts = {
-			render_modes = true,
-			sign = {
-				enabled = false,
-			},
-		},
-	},
-	{
-		"akinsho/toggleterm.nvim",
-		version = "*",
-		opts = {
-			auto_scroll = false,
-		},
-		keys = {
-			{
-				"<C-t>",
-				"<cmd>1ToggleTerm direction=float<cr>",
-				desc = "Toggle terminal",
-				mode = { "n", "t" },
-			},
-			{
-				"<leader>tn",
-				function()
-					local random_num = math.random(2, 999)
-					vim.cmd(random_num .. "ToggleTerm direction=horizontal")
-				end,
-				desc = "New horizontal terminal",
-				mode = { "n" },
-			},
-			{
-				"<leader>ta",
-				"<cmd>ToggleTerm direction=horizontal<cr>",
-				desc = "Toggle all terminals",
-				mode = { "n" },
-			},
-			{
-				"<leader>ts",
-				"<cmd>TermSelect<cr>",
-				desc = "Select terminal",
-				mode = { "n" },
-			},
-			{
-				"<C-x>",
-				"<C-\\><C-n>",
-				mode = "t",
-				desc = "Exit terminal mode",
-			},
-		},
-	},
+  -- Lualine statusline
+  {
+    "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    event = "VeryLazy",
+    config = function()
+      -- Custom component to show active LSP clients
+      local function lsp_clients()
+        local clients = vim.lsp.get_clients({ bufnr = 0 })
+        if #clients == 0 then
+          return ""
+        end
+
+        local client_names = {}
+        for _, client in pairs(clients) do
+          table.insert(client_names, client.name)
+        end
+        return table.concat(client_names, ", ")
+      end
+
+      require("lualine").setup({
+        options = {
+          theme = "catppuccin",
+          globalstatus = true, -- Single statusline for all windows
+          disabled_filetypes = {
+            statusline = { "dashboard", "alpha", "starter" },
+          },
+        },
+        sections = {
+          lualine_a = { "mode" },
+          lualine_b = { "branch", "diff", "diagnostics" },
+          lualine_c = { { "filename", path = 1 } }, -- 1 = relative path
+          lualine_x = { lsp_clients, "fileformat", "filetype" },
+          lualine_y = { "progress" },
+          lualine_z = { "location" },
+        },
+      })
+    end,
+  },
 }
