@@ -1,7 +1,6 @@
 return {
 	{
 		"github/copilot.vim",
-		event = "VeryLazy",
 		config = function()
 			local g = vim.g
 			g.copilot_no_tab_map = true
@@ -17,6 +16,14 @@ return {
 		"olimorris/codecompanion.nvim",
 		version = "^18.0.0",
 		opts = {
+			interactions = {
+				chat = {
+					adapter = {
+						name = "copilot",
+						model = "claude-sonnet-4.5",
+					},
+				},
+			},
 			extensions = {
 				mcphub = {
 					callback = "mcphub.extensions.codecompanion",
