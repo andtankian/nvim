@@ -15,7 +15,6 @@ return {
 	{
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
 		dependency = "mason-org/mason.nvim",
-		event = "VeryLazy",
 		opts = {
 			ensure_installed = vim.list_extend(lsp_servers, externals.formatters),
 		},
