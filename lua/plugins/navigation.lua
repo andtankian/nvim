@@ -82,6 +82,20 @@ return {
 		end,
 	},
 	{
+		"antosha417/nvim-lsp-file-operations",
+		lazy = false,
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-tree/nvim-tree.lua",
+		},
+		config = function()
+			require("lsp-file-operations").setup()
+			vim.lsp.config("ts_ls", {
+				capabilities = require("lsp-file-operations").default_capabilities(),
+			})
+		end,
+	},
+	{
 		"nvim-telescope/telescope.nvim",
 		dependencies = {
 			"nvim-lua/plenary.nvim",

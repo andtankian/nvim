@@ -221,8 +221,8 @@ opt.foldenable = false
 -- Fold method (manual, indent, expr, syntax, diff, marker)
 opt.foldmethod = "expr"
 
--- Use treesitter for folding if available
-opt.foldexpr = "nvim_treesitter#foldexpr()"
+-- Use Neovim's built-in treesitter folding (0.10+)
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
 -- Start with all folds open
 opt.foldlevelstart = 99
