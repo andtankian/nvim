@@ -81,6 +81,19 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 disable_default_keymaps()
 
+-- Command to restart LSP clients for the current buffer
+vim.api.nvim_create_user_command("LspRestart", function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
+    vim.lsp.stop_client(client.id)
+  end
+  vim.schedule(function()
+    vim.api.nvim_exec_autocmds("FileType", { buf = bufnr })
+  end)
+end, { desc = "Restart LSP clients for current buffer" })
+
+vim.keymap.set("n", "<leader>lr", "<cmd>LspRestart<cr>", { desc = "Restart LSP" })
+
 -- Enable all configured language servers
 for key, _ in pairs(languages) do
 	vim.lsp.enable(key)
