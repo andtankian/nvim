@@ -7,6 +7,9 @@ return {
 		"stylua",
 		"prettier",
 	},
+	debuggers = {
+		"js-debug-adapter",
+	},
 	parsers = {
 		"lua",
 		"vim",
