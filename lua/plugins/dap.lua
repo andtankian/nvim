@@ -5,16 +5,9 @@ return {
 			{ "<leader>dc", function() require("dap").continue() end, desc = "Start/Continue" },
 			{ "<leader>do", function() require("dap").step_over() end, desc = "Step over" },
 			{ "<leader>di", function() require("dap").step_into() end, desc = "Step into" },
-			{ "<leader>du", function() require("dap").step_out() end, desc = "Step out" },
+			{ "<leader>dO", function() require("dap").step_out() end, desc = "Step out" },
 			{ "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle breakpoint" },
-			{
-				"<leader>dB",
-				function() require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: ")) end,
-				desc = "Conditional breakpoint",
-			},
-			{ "<leader>dr", function() require("dap").restart() end, desc = "Restart session" },
-			{ "<leader>dt", function() require("dap").terminate() end, desc = "Terminate session" },
-			{ "<leader>dl", function() require("dap").run_last() end, desc = "Re-run last config" },
+			{ "<leader>de", function() require("dap").terminate() end, desc = "Terminate session" },
 		},
 		config = function()
 			local dap = require("dap")
