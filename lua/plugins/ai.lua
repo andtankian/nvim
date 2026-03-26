@@ -12,17 +12,47 @@ return {
 			)
 		end,
 	},
-	{
-		"ravitemer/mcphub.nvim",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-		},
-		build = "npm install -g mcp-hub@latest", -- Installs `mcp-hub` node binary globally
-		opts = {},
-	},
+	-- {
+	-- 	"ravitemer/mcphub.nvim",
+	-- 	dependencies = {
+	-- 		"nvim-lua/plenary.nvim",
+	-- 	},
+	-- 	build = "npm install -g mcp-hub@latest", -- Installs `mcp-hub` node binary globally
+	-- 	opts = {},
+	-- },
+	-- {
+	-- 	"georgeharker/sharedserver",
+	-- 	build = "cargo build --release",
+	-- 	lazy = false,
+	-- },
+	--
+	-- {
+	-- 	"georgeharker/mcp-companion",
+	-- 	lazy = false,
+	-- 	dependencies = {
+	-- 		"nvim-lua/plenary.nvim",
+	-- 		"olimorris/codecompanion.nvim",
+	-- 		"georgeharker/sharedserver",
+	-- 	},
+	-- 	build = "cd bridge && uv venv --python 3.14 .venv && uv sync --frozen",
+	-- 	config = function()
+	-- 		require("mcp_companion").setup({
+	-- 			bridge = {
+	-- 				port = 9741,
+	-- 				config = vim.fn.expand("~/.config/mcp/servers.json"),
+	-- 			},
+	-- 			log = { level = "info", notify = "error" },
+	-- 		})
+	-- 	end,
+	-- },
 	{
 		"olimorris/codecompanion.nvim",
-		version = "^18.0.0",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+			-- "ravitemer/mcphub.nvim",
+			"cairijun/codecompanion-agentskills.nvim",
+		},
 		opts = {
 			interactions = {
 				chat = {
@@ -33,21 +63,37 @@ return {
 				},
 			},
 			extensions = {
-				mcphub = {
-					callback = "mcphub.extensions.codecompanion",
+				-- mcphub = {
+				-- 	callback = "mcphub.extensions.codecompanion",
+				-- 	opts = {
+				-- 		make_vars = true,
+				-- 		make_slash_commands = true,
+				-- 		show_result_in_chat = true,
+				-- 	},
+				-- },
+				-- mcp_companion = {
+				-- 	callback = "mcp_companion.cc",
+				-- 	opts = {},
+				-- },
+				agentskills = {
 					opts = {
-						make_vars = true,
-						make_slash_commands = true,
-						show_result_in_chat = true,
+						paths = {
+							{ ".claude/skills", recursive = true },
+						},
 					},
 				},
 			},
 			prompt_library = {
+				markdown = {
+					dirs = {
+						vim.fn.getcwd() .. "/.claude/commands/opsx",
+					},
+				},
 				["Commit and PR"] = {
 					interaction = "chat",
 					description = "Commit staged changes, push to remote, and create a PR",
 					opts = {
-					  alias = "commit-and-pr",
+						alias = "commit-and-pr",
 						auto_submit = false,
 					},
 					prompts = {
@@ -78,11 +124,6 @@ Always confirm actions before executing them and provide clear explanations of w
 					},
 				},
 			},
-		},
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-treesitter/nvim-treesitter",
-			"ravitemer/mcphub.nvim",
 		},
 		keys = {
 			{

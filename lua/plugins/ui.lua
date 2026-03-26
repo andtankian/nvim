@@ -21,7 +21,7 @@ return {
 
 			require("lualine").setup({
 				options = {
-					theme = "catppuccin",
+					theme = "catppuccin-macchiato", -- Use Catppuccinocaramel theme
 					globalstatus = true, -- Single statusline for all windows
 					disabled_filetypes = {
 						statusline = { "dashboard", "alpha", "starter" },
@@ -32,8 +32,8 @@ return {
 					lualine_b = { "branch", "diff", "diagnostics" },
 					lualine_c = { { "filename", path = 1 } }, -- 1 = relative path
 					lualine_x = { lsp_clients, "fileformat", "filetype" },
-					lualine_y = { "progress" },
-					lualine_z = { "location" },
+					lualine_y = { "" },
+					lualine_z = { "" },
 				},
 			})
 		end,
