@@ -7,7 +7,7 @@
   "codecompanion-agentskills.nvim": { "branch": "master", "commit": "d8c19be5b005c4e8e0343c77411d3bb323b8449b" },
   "codecompanion.nvim": { "branch": "main", "commit": "754979bd326ab144b4a30dc99049518878efe256" },
   "colorviewer.nvim": { "branch": "main", "commit": "7e3fcff372c68526d85028053199721b635d83a1" },
-  "conform.nvim": { "branch": "master", "commit": "086a40dc7ed8242c03be9f47fbcee68699cc2395" },
+  "conform.nvim": { "branch": "master", "commit": "40dcec5555f960b0a04340d76eabdf4efe78599d" },
   "copilot.vim": { "branch": "release", "commit": "a12fd5672110c8aa7e3c8419e28c96943ca179be" },
   "diffview.nvim": { "branch": "main", "commit": "4516612fe98ff56ae0415a259ff6361a89419b0a" },
   "dressing.nvim": { "branch": "master", "commit": "2d7c2db2507fa3c4956142ee607431ddb2828639" },
@@ -39,5 +39,5 @@
   "telescope-live-grep-args.nvim": { "branch": "master", "commit": "8ad632f793fd437865f99af5684f78300dac93fb" },
   "telescope.nvim": { "branch": "master", "commit": "5255aa27c422de944791318024167ad5d40aad20" },
   "toggleterm.nvim": { "branch": "main", "commit": "50ea089fc548917cc3cc16b46a8211833b9e3c7c" },
-  "vim-fugitive": { "branch": "master", "commit": "3b753cf8c6a4dcde6edee8827d464ba9b8c4a6f0" }
+  "vim-fugitive": { "branch": "master", "commit": "61b51c09b7c9ce04e821f6cf76ea4f6f903e3cf4" }
 }
