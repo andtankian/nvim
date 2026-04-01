@@ -60,6 +60,77 @@ return {
 						name = "copilot",
 						model = "claude-sonnet-4.6",
 					},
+					tools = {
+						groups = {
+							["plan"] = {
+								description = "Software architect agent for exploring and designing implementation plans (read-only)",
+								system_prompt = function()
+									local plans_dir = vim.fn.expand("~/.local/share/nvim/plans")
+									vim.fn.mkdir(plans_dir, "p")
+									return "You are a software architect operating in PLAN MODE.\n\n"
+										.. "=== PLAN MODE RULES ===\n"
+										.. "You must NEVER modify or delete existing project files. You must NEVER run destructive commands.\n"
+										.. "Your ONLY allowed write action is creating the final plan file in: "
+										.. plans_dir
+										.. "\n"
+										.. "The plan file must be named descriptively based on the task (e.g., `add-auth-middleware.md`, `refactor-data-layer.md`).\n\n"
+										.. "=== PROCESS ===\n\n"
+										.. "**Phase 1 - Understand**\n"
+										.. "- Read the user's request carefully\n"
+										.. "- Ask clarifying questions if the request is ambiguous\n"
+										.. "- Use file_search and grep_search to locate relevant code\n"
+										.. "- Use read_file to examine key files\n\n"
+										.. "**Phase 2 - Investigate**\n"
+										.. "- Trace through relevant code paths\n"
+										.. "- Identify existing patterns, conventions, and abstractions\n"
+										.. "- Find similar features as reference implementations\n"
+										.. "- Note potential conflicts or dependencies\n\n"
+										.. "**Phase 3 - Design**\n"
+										.. "- Propose an approach with clear rationale\n"
+										.. "- Identify trade-offs and alternatives considered\n"
+										.. "- Ask the user for feedback before finalizing\n\n"
+										.. "**Phase 4 - Write the Plan**\n"
+										.. "When the user is satisfied with the direction, use the create_file tool to write the final plan as a markdown file to "
+										.. plans_dir
+										.. ". Use this format:\n\n"
+										.. "# <Plan Title>\n\n"
+										.. "## Context\n"
+										.. "<Why this change is needed and what prompted it>\n\n"
+										.. "## Recommended Approach\n"
+										.. "<Step-by-step implementation strategy>\n\n"
+										.. "## Files to Modify\n"
+										.. "- `path/to/file` — <what changes and why>\n\n"
+										.. "## Existing Code to Reuse\n"
+										.. "- `path/to/file#function` — <how it helps>\n\n"
+										.. "## Risks and Open Questions\n"
+										.. "- <Anything unresolved>\n\n"
+										.. "## Verification Steps\n"
+										.. "- <How to confirm correctness>\n\n"
+										.. "=== GUIDELINES ===\n"
+										.. "- Do NOT write implementation code. Describe what to do, not the literal code.\n"
+										.. "- Do NOT skip investigation. Always explore before proposing.\n"
+										.. "- When uncertain, ask rather than assume.\n"
+										.. "- Reference files by full path.\n"
+										.. "- Only quote code when the exact text matters (e.g., a signature to reuse).\n"
+										.. "- ONLY use create_file to write the plan to the plans directory. NEVER use it on project files."
+								end,
+								tools = {
+									"file_search",
+									"grep_search",
+									"read_file",
+									"get_changed_files",
+									"get_diagnostics",
+									"ask_questions",
+									"create_file",
+								},
+								opts = {
+									collapse_tools = true,
+									ignore_system_prompt = true,
+									ignore_tool_system_prompt = true,
+								},
+							},
+						},
+					},
 				},
 			},
 			extensions = {
@@ -110,7 +181,7 @@ return {
 7. Push the new branch to the remote repository using `git push -u origin <branch-name>`
 8. Create a pull request using GitHub CLI (`gh pr create`)
 
-Always confirm actions before executing them and provide clear explanations of what you're doing.]]
+Always confirm actions before executing them and provide clear explanations of what you're doing.]],
 						},
 						{
 							role = "user",
@@ -125,7 +196,7 @@ Always confirm actions before executing them and provide clear explanations of w
 7. Push the new branch to remote with tracking (use `git push -u origin <branch-name>`)
 8. Create a PR with a descriptive title (do not make the title a conventional commit message, but a meaningful plain english title)
 9. If the current project has a pull_request_template.md file, use it to generate the PR description. If not, create a detailed description based on the changes.
-10. The pull request description should be written in a temporary markdown file, then used in the gh command to create the PR. After the PR is created, delete the temporary markdown file.]]
+10. The pull request description should be written in a temporary markdown file, then used in the gh command to create the PR. After the PR is created, delete the temporary markdown file.]],
 						},
 					},
 				},
