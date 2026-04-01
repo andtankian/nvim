@@ -157,13 +157,13 @@ return {
 				subagents = {
 					opts = {
 						subagents = {
-							code_reviewer = {
-								description = "Reviews code for bugs, style issues, and improvements. Use this when you want a focused code review.",
-								system_prompt = "You are an expert code reviewer. Analyze code for potential issues, suggest improvements, and provide constructive feedback. Focus on correctness, readability, and adherence to project conventions.",
-								tools = { "file_search", "get_changed_files", "grep_search", "read_file" },
-								context_spec = "Background on the changes or repo, and the code files to review.",
-								result_spec = "A structured review with: issues found, severity levels, and actionable suggestions.",
-							},
+							-- code_reviewer = {
+							-- 	description = "Reviews code for bugs, style issues, and improvements. Use this when you want a focused code review.",
+							-- 	system_prompt = "You are an expert code reviewer. Analyze code for potential issues, suggest improvements, and provide constructive feedback. Focus on correctness, readability, and adherence to project conventions.",
+							-- 	tools = { "file_search", "get_changed_files", "grep_search", "read_file" },
+							-- 	context_spec = "Background on the changes or repo, and the code files to review.",
+							-- 	result_spec = "A structured review with: issues found, severity levels, and actionable suggestions.",
+							-- },
 							pr_reviewer = {
 								description = "Fetches all unresolved PR review comments for a given pull request. Use this to get a summary of outstanding review feedback.",
 								system_prompt = [[You are a PR review assistant. Your job is to fetch and organize unresolved review comments from a GitHub pull request.
@@ -181,6 +181,31 @@ Workflow:
 - **Comment**: the review comment body
 - **Thread**: any replies in the conversation thread
 - **Author**: who left the comment]],
+							},
+							test_verify = {
+								description = "Runs the test suite and reports any failing tests with the reason they failed. Use this to verify correctness after making changes.",
+								system_prompt = [[You are a test verification assistant. Your job is to run the project's tests, identify failures, and explain why each test failed.
+
+Workflow:
+1. Use grep_search or file_search to detect the test runner (e.g. package.json scripts, Makefile, pytest.ini, jest.config, vitest.config, etc.).
+2. Run the appropriate test command using cmd_runner (e.g. `npm test`, `pytest`, `go test ./...`, `cargo test`). If the user specifies a command or scope, use that instead.
+3. Parse the output to find all failing tests.
+4. For each failing test:
+   a. Extract the test name and file path.
+   b. Read the relevant test file and source file to understand what the test is asserting.
+   c. Identify the root cause of the failure (assertion mismatch, exception, timeout, missing mock, etc.).
+5. Return a structured report of failures.
+
+Guidelines:
+- If no tests fail, clearly state that all tests passed.
+- Do not suggest fixes unless explicitly asked — focus on diagnosis.
+- If the test command itself fails to run (e.g. missing dependencies), report that as a setup error.]],
+								tools = { "cmd_runner", "file_search", "grep_search", "read_file", "get_diagnostics" },
+								context_spec = "Optional: a specific test command, file, or scope to run. If omitted, the agent will auto-detect the test runner.",
+								result_spec = [[A structured failure report. For each failing test include:
+- **Test**: the test name and file path
+- **Failure**: the error message or assertion output
+- **Reason**: the root cause of the failure]],
 							},
 						},
 					},
