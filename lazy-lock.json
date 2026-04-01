@@ -5,6 +5,7 @@
   "blink.pairs": { "branch": "main", "commit": "4e43012356d33a26f69eae475f746fbe9f325f44" },
   "catppuccin": { "branch": "main", "commit": "384f304c8b04664c9e0091fbfb3923c5f97c1bcf" },
   "codecompanion-agentskills.nvim": { "branch": "master", "commit": "d8c19be5b005c4e8e0343c77411d3bb323b8449b" },
+  "codecompanion-subagents.nvim": { "branch": "master", "commit": "98bf4eb7b0ce565897eaf40ababedf61e2f738ad" },
   "codecompanion.nvim": { "branch": "main", "commit": "e0fe366cf3af6c80dcac86cb053ef3fe48aae911" },
   "colorviewer.nvim": { "branch": "main", "commit": "7e3fcff372c68526d85028053199721b635d83a1" },
   "conform.nvim": { "branch": "master", "commit": "086a40dc7ed8242c03be9f47fbcee68699cc2395" },

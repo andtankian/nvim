@@ -52,6 +52,7 @@ return {
 			"nvim-treesitter/nvim-treesitter",
 			-- "ravitemer/mcphub.nvim",
 			"cairijun/codecompanion-agentskills.nvim",
+			"cairijun/codecompanion-subagents.nvim",
 		},
 		opts = {
 			interactions = {
@@ -150,6 +151,37 @@ return {
 					opts = {
 						paths = {
 							{ ".claude/skills", recursive = true },
+						},
+					},
+				},
+				subagents = {
+					opts = {
+						subagents = {
+							code_reviewer = {
+								description = "Reviews code for bugs, style issues, and improvements. Use this when you want a focused code review.",
+								system_prompt = "You are an expert code reviewer. Analyze code for potential issues, suggest improvements, and provide constructive feedback. Focus on correctness, readability, and adherence to project conventions.",
+								tools = { "file_search", "get_changed_files", "grep_search", "read_file" },
+								context_spec = "Background on the changes or repo, and the code files to review.",
+								result_spec = "A structured review with: issues found, severity levels, and actionable suggestions.",
+							},
+							pr_reviewer = {
+								description = "Fetches all unresolved PR review comments for a given pull request. Use this to get a summary of outstanding review feedback.",
+								system_prompt = [[You are a PR review assistant. Your job is to fetch and organize unresolved review comments from a GitHub pull request.
+
+Workflow:
+1. Use the GitHub MCP @{github_pull_request_read} tool with method "get_review_comments" to fetch all review threads.
+2. Filter for threads where isResolved is false.
+3. For each unresolved thread, extract: the review comment body, the file path, the line range, and any replies in the thread.
+4. Return a structured list of all unresolved items.]],
+								mcp_servers = { "github" },
+								context_spec = "The repository owner/name and PR number to review.",
+								result_spec = [[A structured list of unresolved review comments. For each item include:
+- **File**: the file path
+- **Lines**: the line range referenced
+- **Comment**: the review comment body
+- **Thread**: any replies in the conversation thread
+- **Author**: who left the comment]],
+							},
 						},
 					},
 				},
