@@ -52,7 +52,7 @@ return {
 			"nvim-treesitter/nvim-treesitter",
 			-- "ravitemer/mcphub.nvim",
 			"cairijun/codecompanion-agentskills.nvim",
-			"cairijun/codecompanion-subagents.nvim",
+			{ "cairijun/codecompanion-subagents.nvim", dir = "~/dev/codecompanion-subagents.nvim", dev = true },
 		},
 		opts = {
 			interactions = {
@@ -107,6 +107,7 @@ return {
 										.. "- <Anything unresolved>\n\n"
 										.. "## Verification Steps\n"
 										.. "- <How to confirm correctness>\n\n"
+                    .. "Before writing the plan, confirm with the user that they are satisfied with the proposed approach. Only write the plan once they approve.\n\n"
 										.. "=== GUIDELINES ===\n"
 										.. "- Do NOT write implementation code. Describe what to do, not the literal code.\n"
 										.. "- Do NOT skip investigation. Always explore before proposing.\n"
@@ -173,7 +174,6 @@ Workflow:
 2. Filter for threads where isResolved is false.
 3. For each unresolved thread, extract: the review comment body, the file path, the line range, and any replies in the thread.
 4. Return a structured list of all unresolved items.]],
-								mcp_servers = { "github" },
 								context_spec = "The repository owner/name and PR number to review.",
 								result_spec = [[A structured list of unresolved review comments. For each item include:
 - **File**: the file path
@@ -182,7 +182,38 @@ Workflow:
 - **Thread**: any replies in the conversation thread
 - **Author**: who left the comment]],
 							},
+							codebase_explorer = {
+								adapter = { name = "copilot", model = "claude-haiku-4.5" },
+								description = "Explores a specific area of the codebase relevant to a feature or task. Use this before implementing something new to understand existing patterns, conventions, and related code that would impact the work.",
+								system_prompt = [[You are a codebase exploration assistant. Your job is to explore a specific scope of the codebase and surface everything relevant to the user's task.
+
+Workflow:
+1. Understand the user's intent: what are they trying to implement or change?
+2. Identify the relevant domain: locate similar components, modules, or files that relate to the task.
+3. Use grep_search to find existing patterns, conventions, and abstractions in that domain (e.g. how components are structured, how a feature type is implemented elsewhere).
+4. Use file_search to find files by naming convention that are likely related (e.g. *Button*, *Form*, *useAuth*).
+5. Use read_file to examine the most relevant files in detail — focus on structure, props/interfaces, patterns, and how things connect.
+6. Use cmd_runner only when needed to inspect directory structure (e.g. `ls src/components`).
+7. Synthesize findings into a focused summary that directly informs the user's task.
+
+Guidelines:
+- Stay scoped: do not explore beyond what is relevant to the user's question or task.
+- Prioritize pattern recognition: how is this type of thing done in this codebase?
+- Surface reusable code, shared utilities, or conventions the user should follow.
+- Identify any related files that would need to be updated when the feature is added.
+- Do not modify any files.]],
+								tools = { "file_search", "grep_search", "read_file", "cmd_runner" },
+								context_spec = "What you want to implement or change. Be specific: e.g. 'add a new form component', 'implement a new API route', 'add a new Redux slice'.",
+								result_spec = [[A focused exploration summary. Include:
+- **Relevant Files**: files directly related to the task area
+- **Existing Patterns**: how similar things are implemented in this codebase
+- **Conventions**: naming, structure, and style conventions to follow
+- **Reusable Code**: utilities, hooks, components, or abstractions to leverage
+- **Impact Surface**: files likely to need changes when this feature is added
+- **Key Findings**: anything else that would directly affect implementation]],
+							},
 							test_verify = {
+								adapter = { name = "copilot", model = "claude-haiku-4.5" },
 								description = "Runs the test suite and reports any failing tests with the reason they failed. Use this to verify correctness after making changes.",
 								system_prompt = [[You are a test verification assistant. Your job is to run the project's tests, identify failures, and explain why each test failed.
 
