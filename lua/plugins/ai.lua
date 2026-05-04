@@ -13,19 +13,10 @@ return {
 		end,
 	},
 	-- {
-	-- 	"ravitemer/mcphub.nvim",
-	-- 	dependencies = {
-	-- 		"nvim-lua/plenary.nvim",
-	-- 	},
-	-- 	build = "npm install -g mcp-hub@latest", -- Installs `mcp-hub` node binary globally
-	-- 	opts = {},
-	-- },
-	-- {
 	-- 	"georgeharker/sharedserver",
-	-- 	build = "cargo build --release",
+	-- 	build = "cargo install --path rust",
 	-- 	lazy = false,
 	-- },
-	--
 	-- {
 	-- 	"georgeharker/mcp-companion",
 	-- 	lazy = false,
@@ -52,7 +43,7 @@ return {
 			"nvim-treesitter/nvim-treesitter",
 			-- "ravitemer/mcphub.nvim",
 			"cairijun/codecompanion-agentskills.nvim",
-			{ "cairijun/codecompanion-subagents.nvim", dir = "~/dev/codecompanion-subagents.nvim", dev = true },
+			{ "cairijun/codecompanion-subagents.nvim", --[[ dir = "~/dev/codecompanion-subagents.nvim", dev = true --]] },
 		},
 		opts = {
 			interactions = {
@@ -74,11 +65,11 @@ return {
 										.. "Your ONLY allowed write action is creating the final plan file in: "
 										.. plans_dir
 										.. "\n"
-										.. "The plan file must be named descriptively based on the task (e.g., `add-auth-middleware.md`, `refactor-data-layer.md`).\n\n"
+										.. "The plan file must be named descriptively based on the task with an addition of a random uuid, example: (e.g., `add-auth-middleware-a4627562-73df-4caa-9937-8f3e12272995.md`, `refactor-data-layer-f5cf6a38-080a-4669-a4e5-ca753282c3f3.md`).\n\n"
 										.. "=== PROCESS ===\n\n"
 										.. "**Phase 1 - Understand**\n"
 										.. "- Read the user's request carefully\n"
-										.. "- Ask clarifying questions if the request is ambiguous\n"
+										.. "- Ask clarifying questions if the request is ambiguous using ask_questions tool\n"
 										.. "- Use file_search and grep_search to locate relevant code\n"
 										.. "- Use read_file to examine key files\n\n"
 										.. "**Phase 2 - Investigate**\n"
@@ -89,7 +80,7 @@ return {
 										.. "**Phase 3 - Design**\n"
 										.. "- Propose an approach with clear rationale\n"
 										.. "- Identify trade-offs and alternatives considered\n"
-										.. "- Ask the user for feedback before finalizing\n\n"
+										.. "- Ask the user for feedback before finalizing using ask_questions\n\n"
 										.. "**Phase 4 - Write the Plan**\n"
 										.. "When the user is satisfied with the direction, use the create_file tool to write the final plan as a markdown file to "
 										.. plans_dir
@@ -107,13 +98,11 @@ return {
 										.. "- <Anything unresolved>\n\n"
 										.. "## Verification Steps\n"
 										.. "- <How to confirm correctness>\n\n"
-                    .. "Before writing the plan, confirm with the user that they are satisfied with the proposed approach. Only write the plan once they approve.\n\n"
 										.. "=== GUIDELINES ===\n"
-										.. "- Do NOT write implementation code. Describe what to do, not the literal code.\n"
+										.. "- Do NOT implement any code directly. Describe what to do. You may write example code in the plan markdown file.\n"
 										.. "- Do NOT skip investigation. Always explore before proposing.\n"
-										.. "- When uncertain, ask rather than assume.\n"
+										.. "- When uncertain, ask rather than assume. Use ask_questions tool\n"
 										.. "- Reference files by full path.\n"
-										.. "- Only quote code when the exact text matters (e.g., a signature to reuse).\n"
 										.. "- ONLY use create_file to write the plan to the plans directory. NEVER use it on project files."
 								end,
 								tools = {
@@ -124,6 +113,7 @@ return {
 									"get_diagnostics",
 									"ask_questions",
 									"create_file",
+                  "ask_questions"
 								},
 								opts = {
 									collapse_tools = true,
@@ -136,14 +126,6 @@ return {
 				},
 			},
 			extensions = {
-				-- mcphub = {
-				-- 	callback = "mcphub.extensions.codecompanion",
-				-- 	opts = {
-				-- 		make_vars = true,
-				-- 		make_slash_commands = true,
-				-- 		show_result_in_chat = true,
-				-- 	},
-				-- },
 				-- mcp_companion = {
 				-- 	callback = "mcp_companion.cc",
 				-- 	opts = {},
@@ -151,20 +133,14 @@ return {
 				agentskills = {
 					opts = {
 						paths = {
-							{ ".claude/skills", recursive = true },
+							{ "~/dev/intern-lygl-loyalty-mission-rule-intl/.github/skills", recursive = true },
+              { "~/.config/ai/skills", recursive = true }
 						},
 					},
 				},
 				subagents = {
 					opts = {
 						subagents = {
-							-- code_reviewer = {
-							-- 	description = "Reviews code for bugs, style issues, and improvements. Use this when you want a focused code review.",
-							-- 	system_prompt = "You are an expert code reviewer. Analyze code for potential issues, suggest improvements, and provide constructive feedback. Focus on correctness, readability, and adherence to project conventions.",
-							-- 	tools = { "file_search", "get_changed_files", "grep_search", "read_file" },
-							-- 	context_spec = "Background on the changes or repo, and the code files to review.",
-							-- 	result_spec = "A structured review with: issues found, severity levels, and actionable suggestions.",
-							-- },
 							pr_reviewer = {
 								description = "Fetches all unresolved PR review comments for a given pull request. Use this to get a summary of outstanding review feedback.",
 								system_prompt = [[You are a PR review assistant. Your job is to fetch and organize unresolved review comments from a GitHub pull request.

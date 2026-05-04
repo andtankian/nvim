@@ -8,6 +8,9 @@ return {
 			{ "<leader>dO", function() require("dap").step_out() end, desc = "Step out" },
 			{ "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle breakpoint" },
 			{ "<leader>de", function() require("dap").terminate() end, desc = "Terminate session" },
+      { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Toggle REPL" },
+      { "<leader>dl", function() require("dap").run_last() end, desc = "Run last" },
+      { "<leader>dh", function() require("dap.ui.widgets").hover() end, desc = "DAP Hover" },
 		},
 		config = function()
 			local dap = require("dap")
