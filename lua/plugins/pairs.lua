@@ -1,7 +1,11 @@
 return {
 	"saghen/blink.pairs",
 	version = "*", -- (recommended) only required with prebuilt binaries
-  event = "InsertEnter",
+	event = "InsertEnter",
+
+	build = function()
+		require("blink.pairs").download():pwait(60000)
+	end,
 
 	-- download prebuilt binaries from github releases
 	dependencies = "saghen/blink.download",
@@ -17,7 +21,7 @@ return {
 		},
 		mappings = {
 			pairs = {
-				['$'] = {}, -- Disable dollar sign pairing
+				["$"] = {}, -- Disable dollar sign pairing
 			},
 		},
 		debug = false,
