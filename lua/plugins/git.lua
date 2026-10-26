@@ -88,12 +88,30 @@ return {
 		},
 		cmd = "Octo",
 	},
+	-- {
+	-- 	"sindrets/diffview.nvim",
+	-- 	config = true,
+	-- 	keys = {
+	-- 		{ "<leader>dv", "<cmd>DiffviewOpen<cr>", desc = "Open diffview" },
+	-- 		{ "<leader>dg", "<cmd>DiffviewClose<cr>", desc = "Close diffview" },
+	-- 	},
+	-- },
 	{
-		"sindrets/diffview.nvim",
-		config = true,
+		"esmuellert/codediff.nvim",
+		cmd = "CodeDiff",
 		keys = {
-			{ "<leader>dv", "<cmd>DiffviewOpen<cr>", desc = "Open diffview" },
-			{ "<leader>dg", "<cmd>DiffviewClose<cr>", desc = "Close diffview" },
+			{ "<leader>dv", "<cmd>CodeDiff<cr>", desc = "Open Codediff" },
+			{ "<leader>dg", "<cmd>tabc<cr>", desc = "Close Codediff" },
 		},
+	},
+	{
+		"georgeguimaraes/review.nvim",
+		version = "*",
+		dependencies = {
+			"esmuellert/codediff.nvim",
+			"MunifTanjim/nui.nvim",
+		},
+		event = "VeryLazy",
+		opts = {},
 	},
 }

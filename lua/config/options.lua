@@ -137,7 +137,7 @@ vim.cmd("filetype plugin indent on")
 -- ============================================================================
 
 -- Disable line wrapping
-opt.wrap = false
+opt.wrap = true
 
 -- Allow backspace over indentation, line breaks, and insertion start
 opt.backspace = "indent,eol,start"
