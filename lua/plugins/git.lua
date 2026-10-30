@@ -99,9 +99,13 @@ return {
 	{
 		"esmuellert/codediff.nvim",
 		cmd = "CodeDiff",
+		opts = {
+			explorer = {
+				view_mode = "tree",
+			},
+		},
 		keys = {
 			{ "<leader>dv", "<cmd>CodeDiff<cr>", desc = "Open Codediff" },
-			{ "<leader>dg", "<cmd>tabc<cr>", desc = "Close Codediff" },
 		},
 	},
 	{
