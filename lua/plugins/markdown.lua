@@ -5,9 +5,11 @@ return {
 			"nvim-treesitter/nvim-treesitter",
 			"nvim-tree/nvim-web-devicons",
 		},
-		ft = { "markdown", "codecompanion" },
+		ft = { "markdown" },
 		opts = {
 			-- Only non-default options
+			-- Off by default; use :RenderMarkdown toggle / buf_toggle
+			enabled = false,
 			code = {
 				left_pad = 2,
 				right_pad = 2,

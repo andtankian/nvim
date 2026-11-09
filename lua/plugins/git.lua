@@ -88,24 +88,12 @@ return {
 		},
 		cmd = "Octo",
 	},
-	-- {
-	-- 	"sindrets/diffview.nvim",
-	-- 	config = true,
-	-- 	keys = {
-	-- 		{ "<leader>dv", "<cmd>DiffviewOpen<cr>", desc = "Open diffview" },
-	-- 		{ "<leader>dg", "<cmd>DiffviewClose<cr>", desc = "Close diffview" },
-	-- 	},
-	-- },
 	{
-		"esmuellert/codediff.nvim",
-		cmd = "CodeDiff",
-		opts = {
-			explorer = {
-				view_mode = "tree",
-			},
-		},
+		"sindrets/diffview.nvim",
+		config = true,
 		keys = {
-			{ "<leader>dv", "<cmd>CodeDiff<cr>", desc = "Open Codediff" },
+			{ "<leader>dv", "<cmd>DiffviewOpen<cr>", desc = "Open diffview" },
+			{ "<leader>dg", "<cmd>DiffviewClose<cr>", desc = "Close diffview" },
 		},
 	},
 	{
